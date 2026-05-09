@@ -6,9 +6,25 @@ from django.http import HttpResponse
 from django.contrib import messages
 # pyrefly: ignore [missing-import]
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import check_password, make_password
 
 from .forms import ResumeForm
 from .models import UserAccount
+
+import os
+
+ALLOWED_RESUME_EXTENSIONS = (".pdf", ".docx")
+MAX_RESUME_SIZE = 10 * 1024 * 1024  # 10 MB
+
+def validate_resume_upload(file):
+    if not file:
+        return False
+    name = file.name.lower()
+    if not name.endswith(ALLOWED_RESUME_EXTENSIONS):
+        return False
+    if file.size > MAX_RESUME_SIZE:
+        return False
+    return True
 
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
@@ -95,12 +111,22 @@ def login_page(request):
         password = request.POST.get("password")
 
         try:
-            user = UserAccount.objects.get(userid=userid, password=password)
-            request.session["logged_user"] = user.userid
-            request.session["logged_name"] = user.name
-            return redirect("home")
+            user = UserAccount.objects.get(userid=userid)
+            if check_password(password, user.password):
+                request.session["logged_user"] = user.userid
+                request.session["logged_name"] = user.name
+                return redirect("home")
+            # Legacy plaintext password fallback for existing data
+            if user.password == password:
+                user.password = make_password(password)
+                user.save()
+                request.session["logged_user"] = user.userid
+                request.session["logged_name"] = user.name
+                return redirect("home")
         except UserAccount.DoesNotExist:
-            messages.error(request, "Invalid UserID or Password")
+            pass
+
+        messages.error(request, "Invalid UserID or Password")
 
     return render(request, "resume_app/login.html")
 
@@ -114,6 +140,9 @@ def signup_page(request):
         password = request.POST.get("password")
         phone = request.POST.get("phone")
 
+        if not password or len(password) < 8:
+            messages.error(request, "Password must be at least 8 characters long.")
+            return redirect("signup")
 
         if UserAccount.objects.filter(userid=userid).exists():
             messages.error(request, "User ID already exists!")
@@ -128,7 +157,7 @@ def signup_page(request):
             email=email,
             phone=phone,
             userid=userid,
-            password=password
+            password=make_password(password)
         )
         messages.success(request, "Account created successfully!")
         return redirect("login")
@@ -172,8 +201,12 @@ def reset_password(request):
         new_password = request.POST.get("password")
         userid = request.session.get("reset_user")
 
+        if not new_password or len(new_password) < 8:
+            messages.error(request, "Password must be at least 8 characters long.")
+            return redirect("reset_password")
+
         user = UserAccount.objects.get(userid=userid)
-        user.password = new_password
+        user.password = make_password(new_password)
         user.save()
 
         # Clear session
@@ -212,7 +245,6 @@ def jd_analyzer_form(request):
 
 # ---------------- PROCESS JD KEYWORDS ----------------
 
-@csrf_exempt
 def jd_analyzer_result(request):
 
     if request.method != "POST":
@@ -227,10 +259,13 @@ def jd_analyzer_result(request):
 
     # ---------------- EXTRACT RESUME TEXT ----------------
     if resume_file:
+        if not validate_resume_upload(resume_file):
+            messages.error(request, "Invalid resume file. Upload a PDF or DOCX under 10MB.")
+            return redirect("jd_analyzer_form")
         try:
-            if resume_file.name.endswith(".pdf"):
+            if resume_file.name.lower().endswith(".pdf"):
                 resume_text = extract_text(BytesIO(resume_file.read()))
-            elif resume_file.name.endswith(".docx"):
+            elif resume_file.name.lower().endswith(".docx"):
                 doc = Document(resume_file)
                 resume_text = "\n".join([p.text for p in doc.paragraphs])
         except:
@@ -578,15 +613,18 @@ def edit_resume(request):
 
     if request.method == "POST" and request.FILES.get("resume_file"):
         file = request.FILES["resume_file"]
+        if not validate_resume_upload(file):
+            messages.error(request, "Invalid resume file. Upload a PDF or DOCX under 10MB.")
+            return render(request, "resume_app/edit_resume.html", {"enhanced_resume": None})
 
         # Extract text
-        if file.name.endswith(".pdf"):
+        if file.name.lower().endswith(".pdf"):
             text = extract_text(BytesIO(file.read()))
-        elif file.name.endswith(".docx"):
+        elif file.name.lower().endswith(".docx"):
             doc = Document(file)
             text = "\n".join([p.text for p in doc.paragraphs])
         else:
-            text = file.read().decode("utf-8", errors="ignore")
+            text = ""
 
         # Enhance text
         lines = text.splitlines()
@@ -867,7 +905,6 @@ def download_resume_doc(request):
 # ---------------- SKILL GAP ANALYSIS RESULT ----------------
 nlp = spacy.load("en_core_web_sm")
 
-@csrf_exempt
 def enhanced_skill_gap_analysis(request):
     # ---------------- GET → Show form ----------------
     if request.method == "GET":
@@ -884,17 +921,21 @@ def enhanced_skill_gap_analysis(request):
     # ---------------- POST ----------------
     if request.method == "POST" and request.FILES.get("resume_file"):
         file = request.FILES["resume_file"]
+        if not validate_resume_upload(file):
+            messages.error(request, "Invalid resume file. Upload a PDF or DOCX under 10MB.")
+            return redirect("skill_gap_form")
+
         job_role = request.POST.get("job_role", "")
         additional_skills = request.POST.getlist("skills")
 
         # Extract resume text
-        if file.name.endswith(".pdf"):
+        if file.name.lower().endswith(".pdf"):
             text = extract_text(BytesIO(file.read()))
-        elif file.name.endswith(".docx"):
+        elif file.name.lower().endswith(".docx"):
             doc = Document(file)
             text = "\n".join([p.text for p in doc.paragraphs])
         else:
-            text = file.read().decode("utf-8", errors="ignore")
+            text = ""
 
         text_lower = text.lower()
 
@@ -1173,7 +1214,7 @@ def enhanced_skill_gap_analysis(request):
     )
 
 #---------------- AI CHAT ASSISTANT ----------------
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = os.environ.get("OPENAI_API_KEY", "")
 
 @csrf_exempt
 def chat_assistant(request):
@@ -1316,7 +1357,6 @@ def backend_database_status(request):
 
 
 
-@csrf_exempt
 def backend_jd_keyword_analysis(request):
     """
     Backend-only JD Keyword Analysis

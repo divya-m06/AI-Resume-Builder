@@ -1,27 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Builder - Home</title>
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
-</head>
-<body>
+{% extends 'resume_app/base.html' %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">Welcome {{ username|default:"User" }}</div>
-        <div class="nav-links">
-            <a href="{% url 'logout' %}"
-               onclick="return confirm('Are you sure you want to logout?')"
-               class="btn-nav-primary"
-            >
-                Logout
-            </a>
-        </div>
-    </nav>
+{% block title %}AI Resume Builder - Home{% endblock %}
 
+{% block content %}
     <div class="dashboard-container">
         
         <!-- MAIN TITLE -->
@@ -77,6 +58,4 @@
         </div>
 
     </div>
-
-</body>
-</html>
+{% endblock %}

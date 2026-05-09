@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Resume</title>
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
-</head>
-<body class="section-light">
+{% extends 'resume_app/base.html' %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">AI Resume Builder</div>
-        <div class="nav-links">
-            <a href="{% url 'home' %}">Dashboard</a>
-        </div>
-    </nav>
+{% block title %}Create Resume{% endblock %}
+{% block body_class %} class="section-light"{% endblock %}
 
+{% block content %}
     <div class="dashboard-container">
         <h1 class="section-title">Create Resume</h1>
         <p class="section-subtext" style="margin-bottom: 40px;">Fill out the details below to generate your professional resume.</p>
@@ -82,6 +69,4 @@
             <button type="submit" class="btn btn-primary btn-full" style="padding: 16px; font-size: 16px;">Generate Resume</button>
         </form>
     </div>
-
-</body>
-</html>
+{% endblock %}

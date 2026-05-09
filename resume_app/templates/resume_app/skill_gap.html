@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill Gap Analysis</title>
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
+{% extends 'resume_app/base.html' %}
+
+{% block title %}Skill Gap Analysis{% endblock %}
+{% block body_class %} class="section-light"{% endblock %}
+
+{% block content %}
     <style>
         .select2-container .select2-selection--single {
             height: 46px;
@@ -56,16 +52,6 @@
             border-color: var(--brand-olive);
         }
     </style>
-</head>
-<body class="section-light">
-
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">AI Resume Builder</div>
-        <div class="nav-links">
-            <a href="{% url 'home' %}">Dashboard</a>
-        </div>
-    </nav>
 
     <div class="dashboard-container" style="max-width: 800px;">
         <div class="card">
@@ -133,5 +119,4 @@
         });
     });
     </script>
-</body>
-</html>
+{% endblock %}

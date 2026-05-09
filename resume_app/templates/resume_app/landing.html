@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Builder</title>
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
-</head>
-<body>
+{% extends 'resume_app/base.html' %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">AI Resume Builder</div>
-        <div class="nav-links" style="display: flex; align-items: center; gap: 15px;">
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
-        </div>
-    </nav>
+{% block title %}AI Resume Builder{% endblock %}
 
+{% block content %}
     <!-- HERO SECTION -->
     <div class="section-dark" style="text-align: center; padding-top: 140px; padding-bottom: 100px;">
         <div style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
@@ -83,6 +68,4 @@
     <div class="section-dark" style="padding: 40px 20px; text-align: center;">
         <p style="color: #666; font-size: 13px;">© 2025 AI Resume Builder — Built for Students and Professionals.</p>
     </div>
-
-</body>
-</html>
+{% endblock %}

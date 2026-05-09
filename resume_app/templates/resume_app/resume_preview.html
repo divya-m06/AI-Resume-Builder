@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Preview</title>
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
-</head>
-<body class="section-light">
+{% extends 'resume_app/base.html' %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">AI Resume Builder</div>
-        <div class="nav-links">
-            <a href="{% url 'home' %}">Dashboard</a>
-        </div>
-    </nav>
+{% block title %}Resume Preview{% endblock %}
+{% block body_class %} class="section-light"{% endblock %}
 
+{% block content %}
     <div class="dashboard-container" style="max-width: 850px;">
         <div class="card" style="padding: 40px;">
             
@@ -78,6 +65,4 @@
 
         </div>
     </div>
-
-</body>
-</html>
+{% endblock %}

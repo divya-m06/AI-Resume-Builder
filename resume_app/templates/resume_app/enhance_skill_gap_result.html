@@ -1,34 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill Gap Analysis Result</title>
-    <link rel="stylesheet" href="{% static 'resume_app/style.css' %}">
-</head>
-<body class="section-light">
+{% extends 'resume_app/base.html' %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">AI Resume Builder</div>
-        <div class="nav-links">
-            <a href="{% url 'home' %}">Dashboard</a>
-        </div>
-    </nav>
+{% block title %}Skill Gap Analysis Result{% endblock %}
+{% block body_class %} class="section-light"{% endblock %}
+
+{% block content %}
+    <div style="max-width: 1100px; margin: 0 auto; padding: 20px 40px 0; display: flex; gap: 24px; justify-content: center;">
+        <a href="{% url 'skill_gap_form' %}" style="font-size: 14px; font-weight: 600; color: var(--brand-olive-dk); text-decoration: none;">← Back to Skill Gap</a>
+        <a href="{% url 'home' %}" style="font-size: 14px; font-weight: 600; color: var(--brand-olive-dk); text-decoration: none;">Home</a>
+    </div>
 
     <div class="dashboard-container">
         <h1 class="section-title">Analysis Results</h1>
         <p class="section-subtext" style="margin-bottom: 40px;">Review your skill gap analysis below.</p>
 
-        <div class="results-grid">
-            
-            <div class="column-1">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+
+            <div>
                 {% if resume_score %}
                 <div class="card" style="margin-bottom: 24px; text-align: center;">
                     <h3 style="margin-bottom: 16px; color: var(--brand-olive-dk);">Resume Score</h3>
-                    <div style="font-size: 48px; font-weight: 800; color: var(--brand-charcoal);">
-                        {{ resume_score }} <span style="font-size: 24px; color: #888;">/ 100</span>
+                    <div style="display: flex; justify-content: center; margin: 16px 0;">
+                        <div style="width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--brand-olive); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                            <span style="font-size: 36px; font-weight: 800; color: var(--brand-charcoal);">{{ resume_score }}</span>
+                            <span style="font-size: 12px; color: #888; font-weight: 600;">/ 100</span>
+                        </div>
                     </div>
                 </div>
                 {% endif %}
@@ -41,7 +36,9 @@
                     </div>
                 </div>
                 {% endif %}
+            </div>
 
+            <div>
                 {% if ats_result %}
                 <div class="card" style="margin-bottom: 24px;">
                     <h3 style="margin-bottom: 20px; color: var(--brand-charcoal);">ATS Skill Check</h3>
@@ -63,43 +60,60 @@
                 {% endif %}
             </div>
 
-            <div class="column-2">
-                {% if suggestions %}
-                <div class="card" style="margin-bottom: 24px;">
-                    <h3 style="margin-bottom: 20px; color: var(--brand-charcoal);">Suggested Courses</h3>
-                    
-                    {% for s in suggestions %}
-                        <h4 style="margin: 16px 0 8px 0; color: var(--brand-olive-dk);">{{ s.skill }}</h4>
-                        {% for c in s.courses %}
-                            <div style="border: 1px solid #ebebeb; border-radius: 12px; padding: 16px; margin-bottom: 12px; background: #fafaf8; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <div style="font-weight: 700; margin-bottom: 4px;">{{ c.title }}</div>
-                                    <div style="font-size: 12px; color: #666;">
-                                        <span class="tag-dark">Beginner</span>
-                                        <span class="tag-dark">6-10 hrs</span>
-                                    </div>
-                                </div>
-                                <a href="{{ c.link }}" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">View</a>
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                {% if interview_questions %}
-                <div class="card">
-                    <h3 style="margin-bottom: 20px; color: var(--brand-charcoal);">Interview Questions</h3>
-                    {% for q in interview_questions %}
-                        <div style="background: #fafaf8; border-left: 4px solid var(--brand-olive-lt); padding: 12px 16px; margin-bottom: 12px; border-radius: 4px; font-size: 14px; font-weight: 500;">
-                            {{ q }}
-                        </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-
         </div>
-    </div>
 
-</body>
-</html>
+        {% if suggestions %}
+        <div class="card" style="margin-bottom: 24px;">
+            <h3 style="margin-bottom: 20px; color: var(--brand-charcoal); text-align: center;">Suggested Courses</h3>
+            {% for s in suggestions %}
+                <h4 style="margin: 16px 0 12px 0; color: var(--brand-olive-dk); text-align: center;">{{ s.skill }}</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                    {% for c in s.courses %}
+                    <div style="border: 1px solid #ebebeb; border-radius: 10px; padding: 14px 16px; background: #fafaf8; display: flex; flex-direction: column; gap: 10px; justify-content: space-between;">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--brand-charcoal);">{{ c.title }}</div>
+                        <a href="{{ c.link }}" target="_blank" style="font-size: 12px; font-weight: 700; color: var(--brand-olive-dk); text-decoration: none; background: rgba(125,155,118,0.1); border: 1px solid rgba(125,155,118,0.25); padding: 6px 14px; border-radius: 20px; text-align: center;">View →</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    {% if suggestions %}
+    <div class="card roadmap-items" style="margin-bottom: 24px; width: 100%;">
+        <h3 style="margin-bottom: 20px; color: var(--brand-charcoal); text-align: center;">Your Learning Roadmap</h3>
+        {% for s in suggestions %}
+        <div class="roadmap-item" style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 16px; padding: 16px; border: 1px solid #ebebeb; border-radius: 12px; background: #fafaf8;">
+            <div style="background: var(--brand-charcoal); color: var(--brand-cream); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0;">
+                Week {{ forloop.counter }}
+            </div>
+            <div>
+                <p style="font-size: 15px; font-weight: 700; color: var(--brand-charcoal); margin-bottom: 4px;">{{ s.skill }}</p>
+                <p style="font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 10px;">Build foundational knowledge in {{ s.skill }}. Complete at least one course and build a small project using this skill to add to your portfolio.</p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                    {% for c in s.courses %}
+                    <a href="{{ c.link }}" target="_blank" style="font-size: 12px; font-weight: 600; color: var(--brand-olive-dk); text-decoration: none; background: rgba(125,155,118,0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(125,155,118,0.25);">{{ c.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="font-size: 14px; color: #666;">No skill gaps detected. Your resume is well matched for this role.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if interview_questions %}
+    <div class="card interview-list" style="display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%;">
+        <h3 style="margin-bottom: 20px; color: var(--brand-charcoal);">Interview Questions</h3>
+        {% for q in interview_questions %}
+        <div class="interview-item" style="display: flex; flex-direction: column; align-items: center; padding: 14px 18px; border-left: 3px solid var(--brand-olive); background: #fafaf8; border-radius: 0 8px 8px 0; margin-bottom: 10px;">
+            <p style="font-size: 14px; color: var(--brand-charcoal); font-weight: 500; margin: 0; width: 100%;">{{ q }}</p>
+        </div>
+        {% empty %}
+        <p style="font-size: 14px; color: #666;">No interview questions available for this role.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}

@@ -21,6 +21,8 @@ urlpatterns = [
     path('download-pdf/', views.download_resume_pdf, name='download_resume_pdf'),
     path('download-doc/', views.download_resume_doc, name='download_resume_doc'),
 
+    # Allow both /login and /login/ for easier access
+    path('login', views.login_page, name='login_no_slash'),
     path('login/', views.login_page, name='login'),
     path('signup/', views.signup_page, name='signup'),
     path('logout/', views.logout_user, name='logout'),

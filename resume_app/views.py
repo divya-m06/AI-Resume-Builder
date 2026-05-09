@@ -486,9 +486,19 @@ def jd_analyzer_result(request):
     # 🔥 SMART MATCHING
     # ====================================================
     suggested_projects = []
+    jd_text_full = request.POST.get("job_description", "").lower()
     for role, skills in role_skill_map.items():
-        if any(skill in jd_keywords for skill in skills):
+        if any(skill in jd_text_full for skill in skills):
             suggested_projects.extend(project_library.get(role, []))
+
+    # Deduplicate by title
+    seen = set()
+    unique_projects = []
+    for p in suggested_projects:
+        if p["title"] not in seen:
+            seen.add(p["title"])
+            unique_projects.append(p)
+    suggested_projects = unique_projects[:6]
 
     # ---------------- FALLBACK ----------------
     if not suggested_projects:

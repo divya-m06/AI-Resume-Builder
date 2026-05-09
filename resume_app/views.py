@@ -1,6 +1,10 @@
+# pyrefly: ignore [missing-import]
 from django.shortcuts import render, redirect
+# pyrefly: ignore [missing-import]
 from django.http import HttpResponse
+# pyrefly: ignore [missing-import]
 from django.contrib import messages
+# pyrefly: ignore [missing-import]
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import ResumeForm
@@ -9,10 +13,13 @@ from .models import UserAccount
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+# pyrefly: ignore [missing-import]
 from docx import Document
+# pyrefly: ignore [missing-import]
 from pdfminer.high_level import extract_text
-
+# pyrefly: ignore [missing-import]
 import openai
+# pyrefly: ignore [missing-import]
 import spacy
 import re
 
@@ -24,16 +31,26 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib import colors
+# pyrefly: ignore [missing-import]
 from docx import Document as DocxDocument
+# pyrefly: ignore [missing-import]
 from docx.shared import Pt
+# pyrefly: ignore [missing-import]
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+# pyrefly: ignore [missing-import]
 from django.http import HttpResponse
+# pyrefly: ignore [missing-import]
 from docx import Document as DocxDocument
+# pyrefly: ignore [missing-import]
 from docx.shared import Pt
+# pyrefly: ignore [missing-import]
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+# pyrefly: ignore [missing-import]
 from docx.oxml import parse_xml
+# pyrefly: ignore [missing-import]
 from docx.oxml.ns import nsdecls
 import json
+# pyrefly: ignore [missing-import]
 from django.http import JsonResponse
 
 

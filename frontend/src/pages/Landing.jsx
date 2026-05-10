@@ -472,13 +472,14 @@ export default function Landing() {
         fontSize: "13px"
       }}>
         <div style={{
-          maxWidth: "1200px",
+          maxWidth: "900px",
           margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "32px"
+          display: "flex",
+          justifyContent: "center",
+          gap: "120px",
+          textAlign: "left"
         }}>
-          <div>
+          <div style={{ maxWidth: "300px" }}>
             <div style={{
               fontSize: "20px",
               fontWeight: "800",
@@ -490,32 +491,6 @@ export default function Landing() {
             <p style={{ color: "var(--brand-cream2)", lineHeight: "1.6" }}>
               Build smarter resumes with AI-powered tools for career success.
             </p>
-          </div>
-          <div>
-            <h4 style={{
-              color: "var(--brand-cream)",
-              fontWeight: "700",
-              marginBottom: "12px"
-            }}>
-              Features
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              <li style={{ marginBottom: "8px" }}>
-                <a href="#" style={{ color: "var(--brand-cream2)", textDecoration: "none" }}>
-                  Resume Builder
-                </a>
-              </li>
-              <li style={{ marginBottom: "8px" }}>
-                <a href="#" style={{ color: "var(--brand-cream2)", textDecoration: "none" }}>
-                  Skill Gap Analysis
-                </a>
-              </li>
-              <li style={{ marginBottom: "8px" }}>
-                <a href="#" style={{ color: "var(--brand-cream2)", textDecoration: "none" }}>
-                  JD Keyword Matcher
-                </a>
-              </li>
-            </ul>
           </div>
           <div>
             <h4 style={{
@@ -546,12 +521,13 @@ export default function Landing() {
         </div>
         <div style={{
           borderTop: "1px solid rgba(125, 155, 118, 0.2)",
-          marginTop: "32px",
+          maxWidth: "1200px",
+          margin: "32px auto 0",
           paddingTop: "20px",
           textAlign: "center",
           color: "var(--brand-cream2)"
         }}>
-          © 2024 AI Resume Builder. All rights reserved.
+          © 2026 AI Resume Builder. All rights reserved.
         </div>
       </footer>
     </div>

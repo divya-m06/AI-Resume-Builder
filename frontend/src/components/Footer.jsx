@@ -9,14 +9,14 @@ export default function Footer() {
       {/* Main footer content */}
       <div style={{
         padding: "40px",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: "40px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         maxWidth: "1200px",
         margin: "0 auto"
       }}>
         {/* Left column */}
-        <div>
+        <div style={{ flex: 1 }}>
           <h3 style={{
             color: "white",
             fontWeight: "bold",
@@ -36,56 +36,58 @@ export default function Footer() {
         </div>
 
         {/* Center column */}
-        <div>
-          <h4 style={{
-            color: "white",
-            fontWeight: "600",
-            fontSize: "14px",
-            marginBottom: "16px"
-          }}>
-            Quick Links
-          </h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <a href="/" style={{
-              color: "var(--brand-cream2)",
-              textDecoration: "none",
-              fontSize: "13px"
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ textAlign: 'left' }}>
+            <h4 style={{
+              color: "white",
+              fontWeight: "600",
+              fontSize: "14px",
+              marginBottom: "16px"
             }}>
-              Home
-            </a>
-            <a href="/dashboard" style={{
-              color: "var(--brand-cream2)",
-              textDecoration: "none",
-              fontSize: "13px"
-            }}>
-              Dashboard
-            </a>
-            <a href="/resume-builder" style={{
-              color: "var(--brand-cream2)",
-              textDecoration: "none",
-              fontSize: "13px"
-            }}>
-              Resume Builder
-            </a>
-            <a href="/skill-gap" style={{
-              color: "var(--brand-cream2)",
-              textDecoration: "none",
-              fontSize: "13px"
-            }}>
-              Skill Gap
-            </a>
-            <a href="/jd-matcher" style={{
-              color: "var(--brand-cream2)",
-              textDecoration: "none",
-              fontSize: "13px"
-            }}>
-              JD Matcher
-            </a>
+              Quick Links
+            </h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <a href="/" style={{
+                color: "var(--brand-cream2)",
+                textDecoration: "none",
+                fontSize: "13px"
+              }}>
+                Home
+              </a>
+              <a href="/dashboard" style={{
+                color: "var(--brand-cream2)",
+                textDecoration: "none",
+                fontSize: "13px"
+              }}>
+                Dashboard
+              </a>
+              <a href="/resume-builder" style={{
+                color: "var(--brand-cream2)",
+                textDecoration: "none",
+                fontSize: "13px"
+              }}>
+                Resume Builder
+              </a>
+              <a href="/skill-gap" style={{
+                color: "var(--brand-cream2)",
+                textDecoration: "none",
+                fontSize: "13px"
+              }}>
+                Skill Gap
+              </a>
+              <a href="/jd-matcher" style={{
+                color: "var(--brand-cream2)",
+                textDecoration: "none",
+                fontSize: "13px"
+              }}>
+                JD Matcher
+              </a>
+            </div>
           </div>
         </div>
 
         {/* Right column */}
-        <div>
+        <div style={{ flex: 1, textAlign: 'right' }}>
           <h4 style={{
             color: "white",
             fontWeight: "600",
@@ -112,18 +114,13 @@ export default function Footer() {
       {/* Bottom bar */}
       <div style={{
         borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-        padding: "20px 40px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+        padding: "24px 40px",
         maxWidth: "1200px",
-        margin: "0 auto"
+        margin: "0 auto",
+        textAlign: "center"
       }}>
-        <div style={{ fontSize: "12px" }}>
-          © 2025 AI Resume Builder. All rights reserved.
-        </div>
-        <div style={{ fontSize: "12px" }}>
-          Built with care for smarter career growth.
+        <div style={{ fontSize: "12px", color: "var(--brand-cream2)" }}>
+          © 2026 AI Resume Builder. All rights reserved. Built with care for smarter career growth.
         </div>
       </div>
     </footer>

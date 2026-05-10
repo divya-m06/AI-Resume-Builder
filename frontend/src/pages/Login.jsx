@@ -291,22 +291,6 @@ export default function Login() {
               />
             </div>
 
-            <div style={{
-              textAlign: "right",
-              marginBottom: "24px"
-            }}>
-              <Link
-                to="/forgot-password"
-                style={{
-                  fontSize: "12px",
-                  color: "var(--brand-olive-dk)",
-                  textDecoration: "none"
-                }}
-              >
-                Forgot Password?
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={loading}
@@ -321,7 +305,8 @@ export default function Login() {
                 fontFamily: "Montserrat, sans-serif",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.7 : 1
+                opacity: loading ? 0.7 : 1,
+                marginTop: "16px"
               }}
             >
               {loading ? "Signing in..." : "Sign In"}

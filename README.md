@@ -10,7 +10,7 @@ A full-stack AI-powered career tools web application that helps users build prof
 |---|---|
 | Resume Builder | Form-based resume generator. Fill in your details and download a professionally formatted PDF or DOCX instantly. |
 | Skill Gap Analyzer | Upload a resume file (PDF or DOCX), select a target job role, and get a breakdown of matched and missing skills using NLP. Includes course suggestions and interview questions. |
-| JD Keyword Matcher | Paste a job description and your resume text to get a keyword match score, matched keywords, and missing keywords. |
+| JD Keyword Matcher | Paste a job description and upload your resume file to get a keyword match score, matched keywords, and missing keywords. |
 | My Resumes | View all previously generated resumes saved to your account. Download as PDF or delete. |
 | Authentication | Secure custom signup and login with bcrypt password hashing and JWT-based session tokens. |
 
@@ -261,6 +261,14 @@ VITE_API_BASE_URL = https://your-render-url.onrender.com
 **6.** After deployment, go back to Render and update `FRONTEND_URL` to your Vercel URL, then redeploy the backend to apply the CORS update.
 
 > **Note:** Render free tier services spin down after 15 minutes of inactivity. The first request after inactivity may take 20–30 seconds to respond.
+
+---
+
+## Notes
+
+- The JD Keyword Matcher now accepts both a job description and an uploaded resume file.
+- Use PDF or DOCX files for resume upload.
+- If you change backend dependencies, reinstall them inside `backend/venv`.
 
 ---
 

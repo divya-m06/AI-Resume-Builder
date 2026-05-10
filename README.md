@@ -1,53 +1,163 @@
-# 🚀 AI Resume Builder and Career Enhancement System
+# AI Resume Builder
 
-> An intelligent, AI-powered resume builder that analyzes job descriptions, identifies skill gaps, and recommends learning resources and interview questions tailored to your career goals.
+A full-stack AI-powered resume builder with React frontend and FastAPI backend.
 
----
+## Project Structure
 
-## 📋 Table of Contents
+```
+AI-Resume-Builder/
+├── frontend/          # React + Vite + Tailwind CSS
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/     # Landing, Login, Dashboard, etc.
+│   │   ├── hooks/     # useAuth
+│   │   ├── lib/       # supabaseClient
+│   │   └── services/  # API service
+│   ├── .env           # Frontend environment variables
+│   └── package.json
+└── backend/           # FastAPI
+    ├── main.py        # FastAPI app with routes
+    ├── skill_gap.py   # Skill gap analysis logic
+    ├── jd_matcher.py  # JD matching logic
+    ├── resume_engine.py # PDF/DOCX generation
+    ├── llm_service.py # Groq API integration
+    ├── .env           # Backend environment variables
+    └── requirements.txt
+```
 
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Python Version](#python-version)
-- [Folder Structure](#folder-structure)
-- [Installation & Setup](#installation--setup)
-- [Configuration](#configuration)
-- [Running the Project](#running-the-project)
-- [Project Modules](#project-modules)
-- [Security Features](#security-features)
-- [Contributing](#contributing)
+## Features
 
----
+- **Resume Builder**: Create professional resumes with PDF/DOCX export
+- **Skill Gap Analysis**: Analyze resume against job requirements
+- **JD Matcher**: Match resumes with job descriptions and suggest projects
+- **AI Learning Roadmap**: Generate personalized learning plans using Groq API
+- **Authentication**: Supabase-based user authentication
 
-## 📌 About
+## Setup Instructions
 
-**AI Resume Builder** is a full-stack web application designed to help job seekers:
-- Create and customize professional resumes
-- Analyze skill gaps compared to job descriptions
-- Get intelligent project recommendations based on desired roles
-- Prepare for interviews with role-specific questions
-- Export resumes in PDF and DOCX formats
+### Prerequisites
 
-The application uses **AI-powered analysis** to match user skills against job requirements and provides personalized learning paths and interview preparation.
+- Node.js 18+ and npm
+- Python 3.8+
+- Supabase account (for authentication)
+- Groq API key (for AI features)
 
----
+### Frontend Setup
 
-## ✨ Features
+1. Navigate to frontend directory:
+   ```bash
+   cd frontend
+   ```
 
-### Core Features
-- ✅ **Resume Builder** — Create resumes from scratch with professional templates
-- ✅ **Resume Preview** — Real-time preview of resume formatting
-- ✅ **Skill Gap Analysis** — Upload resume and analyze missing skills for target roles
-- ✅ **JD Keyword Matching** — Paste job descriptions and get keyword match scores
-- ✅ **Intelligent Project Recommendations** — Get project ideas based on skill gaps
-- ✅ **Interview Questions** — Role-specific interview question suggestions
-- ✅ **Resume Export** — Download resumes as PDF or DOCX
-- ✅ **User Authentication** — Secure login/signup system with OTP-based password reset
-- ✅ **Session Management** — Persistent user sessions across pages
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### Security Features
-- 🔒 Bcrypt password hashing (Django hashers)
+3. Configure environment variables in `.env`:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_API_BASE_URL=http://localhost:8000
+   ```
+
+4. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+### Backend Setup
+
+1. Navigate to backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configure environment variables in `.env`:
+   ```
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_KEY=your_supabase_service_key
+   SUPABASE_JWT_SECRET=your_supabase_jwt_secret
+   GROQ_API_KEY=your_groq_api_key
+   FRONTEND_URL=http://localhost:5173
+   ```
+
+4. Start FastAPI server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+## API Endpoints
+
+### Health Check
+- `GET /health` - Check server status
+
+### Resume Operations
+- `POST /api/resume/create` - Create a new resume
+- `POST /api/resume/download-pdf` - Download resume as PDF
+- `POST /api/resume/download-docx` - Download resume as DOCX
+- `GET /api/resumes/me` - Get user's resumes
+
+### Analysis Features
+- `POST /api/skill-gap/analyze` - Analyze skill gaps
+- `POST /api/jd-matcher/analyze` - Match with job descriptions
+
+## Design System
+
+### Colors
+- **Charcoal**: `#272727` - Primary text
+- **Olive**: `#7d9b76` - Primary brand color
+- **Cream**: `#f5f5e9` - Background
+
+### Typography
+- **Font**: Montserrat (Google Fonts)
+- **Weights**: 400, 500, 600, 700, 800
+
+### Components
+- **Navbar**: Fixed, blurred background, dark theme
+- **Cards**: White background, rounded corners, subtle shadow
+- **Buttons**: Olive background, rounded, Montserrat font
+
+## Development Notes
+
+- All backend files are complete and runnable
+- Frontend uses placeholder pages that will be implemented next
+- Authentication uses Supabase JWT tokens
+- File uploads are limited to PDF/DOCX under 10MB
+- AI features use Groq's llama3-8b-8192 model
+
+## Next Steps
+
+1. Implement individual page components (starting with Landing)
+2. Add authentication UI components
+3. Implement resume form and preview
+4. Add skill gap analysis UI
+5. Add JD matcher interface
+6. Connect all frontend components to backend APIs
+
+## Technologies Used
+
+### Frontend
+- React 19
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
+- Supabase JS
+
+### Backend
+- FastAPI
+- Python 3.8+
+- ReportLab (PDF generation)
+- python-docx (DOCX generation)
+- pdfminer.six (PDF text extraction)
+- Groq API (AI features)
+- Supabase Py (database/auth)
 - 🔒 CSRF token protection
 - 🔒 Secure session cookies
 - 🔒 File upload validation (MIME type & size limits)

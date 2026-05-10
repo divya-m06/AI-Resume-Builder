@@ -1,0 +1,659 @@
+import { useState } from 'react'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+
+const ANSWERS = {
+  "Explain OOP concepts": "OOP stands for Object-Oriented Programming. The four main concepts are Encapsulation, Inheritance, Polymorphism, and Abstraction.",
+  "What is JVM and JDK?": "JVM runs Java bytecode and makes Java platform-independent. JDK is the full development package including JVM, compiler, and tools.",
+  "Explain GIL": "The Global Interpreter Lock prevents multiple threads from executing Python bytecode simultaneously, limiting true parallelism in CPU-bound tasks.",
+  "What are decorators?": "Decorators are functions that wrap another function to extend its behavior without modifying it, defined using the @decorator syntax.",
+  "What is normalization?": "Normalization organizes a database to reduce redundancy through normal forms (1NF, 2NF, 3NF) by dividing tables and defining relationships.",
+  "Explain ETL process": "ETL stands for Extract, Transform, Load — extracting data from sources, transforming it into the required format, and loading it into a data warehouse.",
+  "Difference between supervised and unsupervised learning": "Supervised learning trains on labeled data to predict outcomes. Unsupervised learning finds patterns in unlabeled data like clustering.",
+  "Explain overfitting and underfitting": "Overfitting learns training data too well including noise. Underfitting is when a model is too simple to capture the underlying pattern.",
+  "What is DevOps?": "DevOps combines software development and IT operations to shorten the development lifecycle and deliver high quality software continuously.",
+  "Explain CI/CD pipeline": "CI automatically builds and tests code on every commit. CD automatically deploys tested code to production or staging environments.",
+  "What is cybersecurity?": "Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks, unauthorized access, and data breaches.",
+  "Explain CIA triad": "CIA stands for Confidentiality (only authorized access), Integrity (data is accurate), and Availability (systems accessible when needed).",
+  "What is machine learning?": "Machine learning is a subset of AI where systems learn from data to improve performance on tasks without being explicitly programmed.",
+  "Difference between AI and ML": "AI is the broader concept of machines simulating human intelligence. ML is a subset focused on learning from data. Deep learning is a subset of ML.",
+  "What is REST API?": "REST API is an architectural style for web services using HTTP methods GET, POST, PUT, DELETE and returning data typically in JSON format.",
+  "Explain SDLC": "SDLC is the process of planning, creating, testing, and deploying software. Common models include Agile, Waterfall, and Spiral."
+}
+
+export default function SkillGap() {
+  const [resumeFile, setResumeFile] = useState(null)
+  const [jobRole, setJobRole] = useState("")
+  const [selectedSkills, setSelectedSkills] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [result, setResult] = useState(null)
+  const [openIndex, setOpenIndex] = useState(null)
+
+  const skillOptions = [
+    "Java", "Python", "SQL", "Machine Learning", "Deep Learning",
+    "React", "Node.js", "Docker", "Kubernetes", "AWS",
+    "MongoDB", "PostgreSQL", "TensorFlow", "PyTorch", "NLP"
+  ]
+
+  const toggleSkill = (skill) => {
+    setSelectedSkills(prev =>
+      prev.includes(skill)
+        ? prev.filter(s => s !== skill)
+        : [...prev, skill]
+    )
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.docx'))) {
+      setResumeFile(file)
+    } else {
+      setError("Please select a valid PDF or DOCX file.")
+    }
+  }
+
+  const handleAnalyze = async () => {
+    if (!resumeFile || !jobRole) {
+      setError("Please upload a resume and select a job role.")
+      return
+    }
+    setLoading(true)
+    setError(null)
+    setResult(null)
+    try {
+      const formData = new FormData()
+      formData.append("resume_file", resumeFile)
+      formData.append("job_role", jobRole)
+      formData.append("additional_skills", selectedSkills.join(","))
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/skill-gap/analyze`,
+        { method: "POST", body: formData }
+      )
+      if (!response.ok) throw new Error("Analysis failed")
+      const data = await response.json()
+      setResult(data)
+    } catch (err) {
+      setError("Something went wrong. Make sure the backend is running.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index)
+  }
+
+  return (
+    <div>
+      <Navbar page="app" />
+
+      {/* Header Bar */}
+      <header style={{
+        background: "var(--brand-charcoal)",
+        padding: "52px 40px",
+        paddingTop: "72px",
+        textAlign: "center"
+      }} className="skill-gap-header">
+        <h1 style={{
+          fontSize: "34px",
+          fontWeight: "800",
+          color: "var(--brand-cream)",
+          marginBottom: "8px"
+        }} className="skill-gap-heading">
+          Skill Gap Analysis
+        </h1>
+        <p style={{
+          fontSize: "16px",
+          color: "var(--brand-olive-lt)"
+        }}>
+          Upload your resume and select a job role to see exactly what you are missing.
+        </p>
+      </header>
+
+      {/* Content Area */}
+      <main style={{
+        background: "var(--section-bg)",
+        padding: "48px 24px"
+      }} className="skill-gap-content">
+        <div style={{
+          maxWidth: "860px",
+          margin: "0 auto"
+        }}>
+          {/* Form Card */}
+          <div style={{
+            background: "white",
+            borderRadius: "16px",
+            border: "1px solid #ebebeb",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+            padding: "28px 32px",
+            marginBottom: "24px"
+          }}>
+            <h2 style={{
+              fontSize: "18px",
+              fontWeight: "700",
+              marginBottom: "24px"
+            }}>
+              Analyze Your Resume
+            </h2>
+
+            {/* Upload Resume */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{
+                fontSize: "12px",
+                fontWeight: "700",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: "var(--brand-charcoal)",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Upload Resume (PDF or DOCX)
+              </label>
+              <div
+                style={{
+                  border: "2px dashed #e0e0d8",
+                  borderRadius: "10px",
+                  padding: "24px",
+                  textAlign: "center",
+                  background: "#fafaf8",
+                  cursor: "pointer"
+                }}
+                onClick={() => document.getElementById('resume-upload').click()}
+              >
+                <input
+                  id="resume-upload"
+                  type="file"
+                  accept=".pdf,.docx"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                {resumeFile ? (
+                  <div style={{ color: "var(--brand-charcoal)", fontWeight: "600" }}>
+                    {resumeFile.name}
+                  </div>
+                ) : (
+                  <div style={{ color: "#666" }}>
+                    Click to upload or drag and drop — PDF or DOCX
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Select Job Role */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{
+                fontSize: "12px",
+                fontWeight: "700",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: "var(--brand-charcoal)",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Select Job Role
+              </label>
+              <select
+                value={jobRole}
+                onChange={(e) => setJobRole(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  border: "1.5px solid #e0e0d8",
+                  borderRadius: "10px",
+                  fontSize: "14px",
+                  fontFamily: "Montserrat",
+                  background: "#fafaf8",
+                  color: "var(--brand-charcoal)",
+                  outline: "none"
+                }}
+              >
+                <option value="" disabled>Select job role</option>
+                <option value="Java Developer">Java Developer</option>
+                <option value="Python Developer">Python Developer</option>
+                <option value="Data Analyst">Data Analyst</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="AIML Engineer">AIML Engineer</option>
+                <option value="Software Developer">Software Developer</option>
+                <option value="Full Stack Developer">Full Stack Developer</option>
+                <option value="Frontend Developer">Frontend Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+                <option value="Cloud Engineer">Cloud Engineer</option>
+                <option value="DevOps Engineer">DevOps Engineer</option>
+                <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+                <option value="Big Data Engineer">Big Data Engineer</option>
+                <option value="Network Engineer">Network Engineer</option>
+                <option value="AI Engineer">AI Engineer</option>
+              </select>
+            </div>
+
+            {/* Additional Skills */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{
+                fontSize: "12px",
+                fontWeight: "700",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: "var(--brand-charcoal)",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Additional Skills (Optional)
+              </label>
+              <div style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "8px"
+              }} className="skill-chips">
+                {skillOptions.map(skill => (
+                  <button
+                    key={skill}
+                    onClick={() => toggleSkill(skill)}
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "20px",
+                      border: selectedSkills.includes(skill) ? "none" : "1px solid var(--brand-olive)",
+                      background: selectedSkills.includes(skill) ? "var(--brand-olive)" : "white",
+                      color: selectedSkills.includes(skill) ? "white" : "var(--brand-olive-dk)",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      fontFamily: "Montserrat"
+                    }} className="skill-chip"
+                  >
+                    {skill}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Analyze Button */}
+            <button
+              onClick={handleAnalyze}
+              disabled={loading || !resumeFile || !jobRole}
+              style={{
+                width: "100%",
+                background: "var(--brand-olive)",
+                color: "white",
+                borderRadius: "12px",
+                padding: "15px",
+                fontSize: "16px",
+                fontWeight: "700",
+                cursor: loading || !resumeFile || !jobRole ? "not-allowed" : "pointer",
+                border: "none",
+                opacity: loading || !resumeFile || !jobRole ? 0.6 : 1
+              }}
+            >
+              {loading ? "Analyzing your resume..." : "Analyze Resume"}
+            </button>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              background: "rgba(193,18,31,0.08)",
+              borderLeft: "4px solid #c1121f",
+              color: "#c1121f",
+              borderRadius: "8px",
+              padding: "14px 18px",
+              fontSize: "14px",
+              marginBottom: "24px"
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Results Section */}
+          {result && (
+            <>
+              {/* Score + ATS Results */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                gap: "16px",
+                marginBottom: "24px"
+              }} className="score-ats-grid">
+                {/* Resume Score */}
+                <div style={{
+                  background: "white",
+                  borderRadius: "16px",
+                  border: "1px solid #ebebeb",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                  padding: "24px",
+                  textAlign: "center"
+                }}>
+                  <h3 style={{
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    color: "var(--brand-olive-dk)",
+                    marginBottom: "16px"
+                  }}>
+                    Resume Score
+                  </h3>
+                  <div style={{
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    border: "8px solid var(--brand-olive)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    margin: "16px auto"
+                  }}>
+                    <div style={{
+                      fontSize: "36px",
+                      fontWeight: "800",
+                      color: "var(--brand-charcoal)"
+                    }}>
+                      {result.resume_score}
+                    </div>
+                    <div style={{
+                      fontSize: "12px",
+                      color: "#888"
+                    }}>
+                      /100
+                    </div>
+                  </div>
+                </div>
+
+                {/* ATS Skill Check */}
+                <div style={{
+                  background: "white",
+                  borderRadius: "16px",
+                  border: "1px solid #ebebeb",
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                  padding: "24px"
+                }}>
+                  <h3 style={{
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    marginBottom: "16px"
+                  }}>
+                    ATS Skill Check
+                  </h3>
+
+                  <div style={{ marginBottom: "16px" }}>
+                    <div style={{
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: "var(--brand-charcoal)",
+                      marginBottom: "8px"
+                    }}>
+                      Skills Found:
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                      {result.ats_result.found.map(skill => (
+                        <span key={skill} style={{
+                          background: "rgba(125,155,118,0.12)",
+                          border: "1px solid rgba(125,155,118,0.25)",
+                          color: "var(--brand-olive-dk)",
+                          padding: "4px 12px",
+                          borderRadius: "20px",
+                          fontSize: "13px",
+                          fontWeight: "600"
+                        }}>
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: "var(--brand-charcoal)",
+                      marginBottom: "8px"
+                    }}>
+                      Skills Missing:
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                      {result.ats_result.missing.map(skill => (
+                        <span key={skill} style={{
+                          background: "rgba(193,18,31,0.07)",
+                          border: "1px solid rgba(193,18,31,0.2)",
+                          color: "#c1121f",
+                          padding: "4px 12px",
+                          borderRadius: "20px",
+                          fontSize: "13px",
+                          fontWeight: "600"
+                        }}>
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Suggested Courses */}
+              <div style={{
+                background: "white",
+                borderRadius: "16px",
+                border: "1px solid #ebebeb",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                padding: "28px",
+                marginBottom: "24px"
+              }}>
+                <h3 style={{
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  marginBottom: "20px"
+                }}>
+                  Suggested Courses
+                </h3>
+                {result.suggestions.map((suggestion, index) => (
+                  <div key={index} style={{ marginBottom: "24px" }}>
+                    <h4 style={{
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      color: "var(--brand-olive-dk)",
+                      marginBottom: "12px"
+                    }}>
+                      {suggestion.skill}
+                    </h4>
+                    <div style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                      gap: "12px"
+                    }} className="courses-grid">
+                      {suggestion.courses.map((course, courseIndex) => (
+                        <div key={courseIndex} style={{
+                          border: "1px solid #ebebeb",
+                          borderRadius: "10px",
+                          padding: "14px 16px",
+                          background: "#fafaf8",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px"
+                        }}>
+                          <div style={{
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            color: "var(--brand-charcoal)"
+                          }}>
+                            {course.title}
+                          </div>
+                          <a
+                            href={course.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "700",
+                              color: "var(--brand-olive-dk)",
+                              background: "rgba(125,155,118,0.1)",
+                              border: "1px solid rgba(125,155,118,0.25)",
+                              padding: "6px 14px",
+                              borderRadius: "20px",
+                              textDecoration: "none",
+                              textAlign: "center"
+                            }}
+                          >
+                            View →
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Learning Roadmap */}
+              <div style={{
+                background: "white",
+                borderRadius: "16px",
+                border: "1px solid #ebebeb",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                padding: "28px",
+                marginBottom: "24px"
+              }}>
+                <h3 style={{
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  marginBottom: "20px"
+                }}>
+                  Your Learning Roadmap
+                </h3>
+                {result.suggestions.map((suggestion, index) => (
+                  <div key={index} style={{
+                    display: "flex",
+                    gap: "20px",
+                    alignItems: "flex-start",
+                    padding: "16px",
+                    border: "1px solid #ebebeb",
+                    borderRadius: "12px",
+                    background: "#fafaf8",
+                    marginBottom: "12px"
+                  }} className="roadmap-item">
+                    <div style={{
+                      background: "var(--brand-charcoal)",
+                      color: "var(--brand-cream)",
+                      borderRadius: "8px",
+                      padding: "6px 14px",
+                      fontSize: "12px",
+                      fontWeight: "800",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0
+                    }} className="week-badge">
+                      Week {index + 1}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: "14px",
+                        fontWeight: "700",
+                        color: "var(--brand-charcoal)",
+                        marginBottom: "8px"
+                      }}>
+                        {suggestion.skill}
+                      </div>
+                      <div style={{
+                        fontSize: "13px",
+                        color: "#666",
+                        lineHeight: "1.5",
+                        marginBottom: "12px"
+                      }}>
+                        Build foundational knowledge in {suggestion.skill.toLowerCase()}. Complete at least one course and build a small project to add to your portfolio.
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        {suggestion.courses.slice(0, 2).map((course, courseIndex) => (
+                          <a
+                            key={courseIndex}
+                            href={course.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "600",
+                              color: "var(--brand-olive-dk)",
+                              background: "rgba(125,155,118,0.1)",
+                              border: "1px solid rgba(125,155,118,0.25)",
+                              padding: "4px 12px",
+                              borderRadius: "20px",
+                              textDecoration: "none"
+                            }}
+                          >
+                            {course.title.split(' – ')[0]}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Interview Questions */}
+              <div style={{
+                background: "white",
+                borderRadius: "16px",
+                border: "1px solid #ebebeb",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                padding: "28px"
+              }}>
+                <h3 style={{
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  marginBottom: "20px"
+                }}>
+                  Interview Questions
+                </h3>
+                {result.interview_questions.map((question, index) => (
+                  <div key={index} style={{
+                    border: "1px solid #ebebeb",
+                    borderRadius: "10px",
+                    marginBottom: "10px",
+                    overflow: "hidden",
+                    background: "#fafaf8"
+                  }}>
+                    <div
+                      onClick={() => toggleAccordion(index)}
+                      style={{
+                        padding: "16px 20px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        color: "var(--brand-charcoal)",
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        borderLeft: "3px solid var(--brand-olive)"
+                      }}
+                    >
+                      {question}
+                      <span style={{
+                        fontSize: "12px",
+                        transform: openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
+                        transition: "transform 0.2s"
+                      }}>
+                        ▼
+                      </span>
+                    </div>
+                    {openIndex === index && (
+                      <div style={{
+                        padding: "14px 20px",
+                        fontSize: "13px",
+                        color: "#555",
+                        lineHeight: "1.7",
+                        borderTop: "1px solid #ebebeb",
+                        background: "white"
+                      }}>
+                        {ANSWERS[question] || "Answer not available for this question."}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}

@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-charcoal: #272727;
+  --brand-olive: #7d9b76;
+  --brand-olive-dk: #5f7a59;
+  --brand-olive-lt: #a3bfa0;
+  --brand-cream: #f5f5e9;
+  --brand-cream2: #d8d8cc;
+  --section-bg: #f8f8f4;
+  --brand-charcoal3: #2f2f2f;
+  --section-dark: #1a1a1a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--section-bg);
+  color: var(--brand-charcoal);
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    text-align: center;
+  }
+
+  .hero-heading {
+    font-size: 36px !important;
+  }
+
+  .hero-subtext {
+    font-size: 16px !important;
+    max-width: 100% !important;
+  }
+
+  .hero-buttons {
+    justify-content: center !important;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .how-it-works-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .section-padding {
+    padding: 60px 20px !important;
+  }
+
+  .hero-padding {
+    padding: 60px 20px !important;
+  }
+
+  /* Dashboard responsive styles */
+  .dashboard-header {
+    padding: 40px 20px !important;
+    padding-top: 72px !important;
+  }
+
+  .dashboard-heading {
+    font-size: 28px !important;
+  }
+
+  .dashboard-content {
+    padding: 32px 16px !important;
+  }
+
+  .feature-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .how-it-works-steps {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+
+  .stats-grid {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+}
+
+/* ResumeBuilder Responsive Styles */
+@media (max-width: 768px) {
+  .resume-builder-header {
+    padding: 40px 20px !important;
+    padding-top: 60px !important;
+  }
+
+  .resume-builder-heading {
+    font-size: 28px !important;
+  }
+
+  .resume-builder-content {
+    padding: 32px 16px !important;
+  }
+
+  .personal-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .download-buttons {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-builder-header {
+    padding: 32px 16px !important;
+    padding-top: 52px !important;
+  }
+
+  .resume-builder-heading {
+    font-size: 24px !important;
+  }
+
+  .form-card {
+    padding: 20px 16px !important;
+  }
+}
+
+/* SkillGap Responsive Styles */
+@media (max-width: 768px) {
+  .skill-gap-header {
+    padding: 40px 20px !important;
+    padding-top: 60px !important;
+  }
+
+  .skill-gap-heading {
+    font-size: 28px !important;
+  }
+
+  .skill-gap-content {
+    padding: 32px 16px !important;
+  }
+
+  .score-ats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .roadmap-item {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .week-badge {
+    align-self: flex-start !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .skill-gap-header {
+    padding: 32px 16px !important;
+    padding-top: 52px !important;
+  }
+
+  .skill-gap-heading {
+    font-size: 24px !important;
+  }
+
+  .skill-chips {
+    gap: 6px !important;
+  }
+
+  .skill-chip {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-heading {
+    font-size: 28px !important;
+  }
+
+  .hero-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .hero-buttons > * {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+
+  .dashboard-heading {
+    font-size: 24px !important;
+  }
+
+  .feature-card {
+    padding: 24px !important;
+  }
+
+  .feature-card-title {
+    font-size: 18px !important;
+  }
+}

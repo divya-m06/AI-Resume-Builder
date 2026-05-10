@@ -126,6 +126,16 @@ export const analyzeJD = (jdText, resumeText) =>
     body: JSON.stringify({ jd_text: jdText, resume_text: resumeText }),
   })
 
+export const analyzeJDFile = (resumeFile) => {
+  const formData = new FormData()
+  formData.append("resume_file", resumeFile)
+  return api.post("/api/jd-match-upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  }).then((res) => res.data)
+}
+
 export async function generateCoverLetter(data) {
   return apiFetch("/api/cover-letter/generate", {
     method: "POST",

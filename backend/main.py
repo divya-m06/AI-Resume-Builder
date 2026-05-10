@@ -364,14 +364,42 @@ async def skill_gap_analyze(
     return result
 
 @app.post("/api/jd-match")
-async def jd_match_analyze(data: dict):
-    jd_text = data.get("jd_text", "")
-    resume_text = data.get("resume_text", "")
+async def jd_match_analyze(
+    job_description: str = Form(...),
+    resume: UploadFile = File(...)
+):
+    if not job_description.strip():
+        raise HTTPException(400, "Job description is required")
+    if not resume.filename.lower().endswith(('.pdf', '.docx')):
+        raise HTTPException(400, "Only PDF and DOCX files are allowed")
 
-    if not jd_text or not resume_text:
-        raise HTTPException(400, "Both job description and resume text are required")
+    content = await resume.read()
+    if resume.filename.lower().endswith('.pdf'):
+        from pdfminer.high_level import extract_text
+        resume_text = extract_text(io.BytesIO(content))
+    else:
+        from docx import Document
+        doc = Document(io.BytesIO(content))
+        resume_text = "\n".join([p.text for p in doc.paragraphs])
 
-    result = analyze_jd(jd_text, resume_text)
+    result = analyze_jd(job_description, resume_text)
+    return result
+
+@app.post("/api/jd-match-upload")
+async def jd_match_upload(resume_file: UploadFile = File(...)):
+    if not resume_file.filename.lower().endswith(('.pdf', '.docx')):
+        raise HTTPException(400, "Only PDF and DOCX files are allowed")
+
+    content = await resume_file.read()
+    if resume_file.filename.lower().endswith('.pdf'):
+        from pdfminer.high_level import extract_text
+        resume_text = extract_text(io.BytesIO(content))
+    else:
+        from docx import Document
+        doc = Document(io.BytesIO(content))
+        resume_text = "\n".join([p.text for p in doc.paragraphs])
+
+    result = analyze_jd(resume_text, resume_text)
     return result
 
 @app.post("/api/cover-letter/generate")

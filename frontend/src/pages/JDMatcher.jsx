@@ -1,27 +1,53 @@
 import { useState } from 'react'
 import Navbar from '../components/Navbar'
-import { analyzeJD } from '../services/api'
 
 export default function JDMatcher() {
-  const [jdText, setJdText] = useState("")
-  const [resumeText, setResumeText] = useState("")
+  const [jobDescription, setJobDescription] = useState("")
+  const [resumeFile, setResumeFile] = useState(null)
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  const handleFileChange = (e) => {
+    setError(null)
+    const file = e.target.files[0]
+    if (file) {
+      if (!file.name.toLowerCase().endsWith('.pdf') && !file.name.toLowerCase().endsWith('.docx')) {
+        setError('Only PDF or DOCX resume files are allowed')
+        setResumeFile(null)
+        return
+      }
+      setResumeFile(file)
+    }
+  }
+
   const handleAnalyze = async () => {
-    if (!jdText.trim() || !resumeText.trim()) {
-      setError("Please fill in both job description and resume text.")
+    if (!jobDescription.trim() || !resumeFile) {
+      setError('Please provide both a job description and a resume file.')
       return
     }
     setLoading(true)
     setError(null)
     setResult(null)
     try {
-      const data = await analyzeJD(jdText, resumeText)
+      const formData = new FormData()
+      formData.append('job_description', jobDescription)
+      formData.append('resume', resumeFile)
+
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/jd-match`, {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        throw new Error(errorText || `Request failed with status ${response.status}`)
+      }
+
+      const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError(err?.message || "Something went wrong. Make sure the backend is running.")
+      setError(err?.message || 'Something went wrong. Make sure the backend is running.')
     } finally {
       setLoading(false)
     }
@@ -50,7 +76,7 @@ export default function JDMatcher() {
           fontSize: "16px",
           color: "var(--brand-olive-lt)"
         }}>
-          See how well your resume matches a job description
+          Upload your resume to analyze its content
         </p>
       </header>
 
@@ -75,11 +101,10 @@ export default function JDMatcher() {
             <form onSubmit={(e) => e.preventDefault()} style={{ margin: 0 }}>
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gridTemplateColumns: "1fr",
               gap: "24px",
               marginBottom: "32px"
             }}>
-              {/* Job Description */}
               <div>
                 <label style={{
                   fontSize: "12px",
@@ -93,12 +118,12 @@ export default function JDMatcher() {
                   Job Description
                 </label>
                 <textarea
-                  value={jdText}
-                  onChange={(e) => setJdText(e.target.value)}
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
                   placeholder="Paste the job description here..."
                   style={{
                     width: "100%",
-                    minHeight: "220px",
+                    minHeight: "180px",
                     border: "1px solid #ebebeb",
                     borderRadius: "12px",
                     fontFamily: "Montserrat",
@@ -112,7 +137,6 @@ export default function JDMatcher() {
                 />
               </div>
 
-              {/* Resume Text */}
               <div>
                 <label style={{
                   fontSize: "12px",
@@ -123,26 +147,30 @@ export default function JDMatcher() {
                   display: "block",
                   marginBottom: "8px"
                 }}>
-                  Your Resume
+                  Resume
                 </label>
-                <textarea
-                  value={resumeText}
-                  onChange={(e) => setResumeText(e.target.value)}
-                  placeholder="Paste your resume text here..."
-                  style={{
-                    width: "100%",
-                    minHeight: "220px",
-                    border: "1px solid #ebebeb",
-                    borderRadius: "12px",
-                    fontFamily: "Montserrat",
-                    padding: "16px",
-                    fontSize: "14px",
-                    resize: "vertical",
-                    outline: "none",
-                    background: "white",
-                    color: "var(--brand-charcoal)"
-                  }}
-                />
+                <div style={{
+                  border: "1px dashed #d8d8d8",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  background: "#fafafa"
+                }}>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={handleFileChange}
+                    style={{ width: "100%" }}
+                  />
+                  {resumeFile && (
+                    <div style={{
+                      marginTop: "14px",
+                      color: "var(--brand-charcoal)",
+                      fontSize: "14px"
+                    }}>
+                      Selected file: {resumeFile.name}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -151,7 +179,7 @@ export default function JDMatcher() {
               <button
                 type="button"
                 onClick={handleAnalyze}
-                disabled={loading || !jdText.trim() || !resumeText.trim()}
+                disabled={loading || !resumeFile}
                 style={{
                   background: "var(--brand-olive)",
                   color: "white",
@@ -159,9 +187,9 @@ export default function JDMatcher() {
                   padding: "14px 36px",
                   fontSize: "16px",
                   fontWeight: "700",
-                  cursor: loading || !jdText.trim() || !resumeText.trim() ? "not-allowed" : "pointer",
+                  cursor: loading || !resumeFile ? "not-allowed" : "pointer",
                   border: "none",
-                  opacity: loading || !jdText.trim() || !resumeText.trim() ? 0.6 : 1
+                  opacity: loading || !resumeFile ? 0.6 : 1
                 }}
               >
                 {loading ? "Analyzing..." : "Analyze Match"}

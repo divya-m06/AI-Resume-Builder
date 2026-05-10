@@ -452,13 +452,20 @@ export default function Dashboard() {
                 color: "var(--brand-olive)",
                 marginBottom: "4px"
               }}>
-                6+ Job Roles
+                16+
               </div>
               <div style={{
                 fontSize: "13px",
                 color: "#666"
               }}>
-                Supported for skill gap analysis
+                Job Roles Supported
+              </div>
+              <div style={{
+                fontSize: "11px",
+                color: "#aaa",
+                marginTop: "2px"
+              }}>
+                From Software Developer to AI Engineer
               </div>
             </div>
 
@@ -477,13 +484,20 @@ export default function Dashboard() {
                 color: "var(--brand-olive)",
                 marginBottom: "4px"
               }}>
-                AI Roadmap
+                AI Powered
               </div>
               <div style={{
                 fontSize: "13px",
                 color: "#666"
               }}>
-                Personalized week-by-week learning plan
+                Learning Roadmap
+              </div>
+              <div style={{
+                fontSize: "11px",
+                color: "#aaa",
+                marginTop: "2px"
+              }}>
+                Personalized week-by-week plan using Groq LLM
               </div>
             </div>
 
@@ -502,13 +516,20 @@ export default function Dashboard() {
                 color: "var(--brand-olive)",
                 marginBottom: "4px"
               }}>
-                PDF + DOCX
+                3-in-1
               </div>
               <div style={{
                 fontSize: "13px",
                 color: "#666"
               }}>
-                Download in multiple formats
+                Career Toolkit
+              </div>
+              <div style={{
+                fontSize: "11px",
+                color: "#aaa",
+                marginTop: "2px"
+              }}>
+                Resume Builder, Skill Gap Analyzer, JD Matcher
               </div>
             </div>
           </section>

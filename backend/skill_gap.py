@@ -267,7 +267,6 @@ def analyze_skill_gap(job_role, resume_text, additional_skills=None):
         ]
     }
 
-    interview_questions = interview_bank.get(job_role.lower(), [])
 
     return {
         "job_role": job_role,
@@ -277,6 +276,6 @@ def analyze_skill_gap(job_role, resume_text, additional_skills=None):
             "missing": missing_skills
         },
         "suggestions": suggestions,
-        "interview_questions": interview_questions
+        "interview_questions": []   # Populated by Groq in the API route (main.py)
     }
 

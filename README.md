@@ -28,7 +28,7 @@ A full-stack AI-powered career tools web application that helps users build prof
 **Backend**
 - FastAPI (Python)
 - spaCy (`en_core_web_sm`) + rapidfuzz — NLP-based skill extraction and fuzzy matching
-- Groq API (`llama3-8b-8192`) — AI-generated learning roadmaps
+- Groq API (`llama-3.3-70b-versatile`) — AI-generated learning roadmaps
 - PyJWT + bcrypt — authentication
 - ReportLab — PDF generation
 - python-docx — DOCX generation

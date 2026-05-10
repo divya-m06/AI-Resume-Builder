@@ -1,4 +1,6 @@
 import re
+import os
+from groq import Groq
 
 STOP_WORDS = {
     "and", "the", "are", "have", "our", "with", "for", "that", "this",
@@ -23,6 +25,29 @@ STOP_WORDS = {
     "html", "have", "build", "building", "applications"
 }
 
+def generate_jd_suggestion(matched, missing, score):
+    """
+    Use Groq to generate specific, actionable advice based on keyword match results.
+    Falls back to a generic message if the API call fails.
+    """
+    try:
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        prompt = f"""A candidate has a {score}% keyword match for a job.
+Matched skills: {', '.join(matched[:10]) if matched else 'none'}
+Missing skills: {', '.join(missing[:10]) if missing else 'none'}
+Write 2-3 sentences of specific, actionable advice to improve their resume for this job. Be direct and practical."""
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=200
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"JD suggestion generation error: {e}")
+        if missing:
+            return f"Consider adding {', '.join(missing[:3])} to your resume to improve alignment with this role."
+        return "Your resume aligns well with this job description."
+
 def analyze_jd(jd_text, resume_text):
     """
     Analyze job description against resume and return keyword match results.
@@ -41,12 +66,8 @@ def analyze_jd(jd_text, resume_text):
     missing_keywords = sorted(list(jd_keywords - resume_keywords))
     score = int((len(matched_keywords) / len(jd_keywords)) * 100) if jd_keywords else 0
 
-    # Generate suggestion based on missing keywords
-    if missing_keywords:
-        top_missing = missing_keywords[:3]  # Top 3 missing keywords
-        suggestion = f"Consider adding skills like {', '.join(top_missing)} to improve your match. Focus on gaining experience in these areas through projects or certifications."
-    else:
-        suggestion = "Great match! Your resume aligns well with the job requirements. Consider tailoring your experience section to highlight these matching skills more prominently."
+    # Generate AI suggestion via Groq
+    suggestion = generate_jd_suggestion(matched_keywords, missing_keywords, score)
 
     return {
         "score": score,

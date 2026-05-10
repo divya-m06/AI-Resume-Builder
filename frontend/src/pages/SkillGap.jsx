@@ -334,25 +334,36 @@ export default function SkillGap() {
                     width: "120px",
                     height: "120px",
                     borderRadius: "50%",
-                    border: "8px solid var(--brand-olive)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    margin: "16px auto"
+                    position: "relative",
+                    margin: "16px auto",
+                    background: `conic-gradient(var(--brand-olive) ${result.resume_score}%, #f0f0f0 0%)`
                   }}>
                     <div style={{
-                      fontSize: "36px",
-                      fontWeight: "800",
-                      color: "var(--brand-charcoal)"
+                      position: "absolute",
+                      top: "8px",
+                      left: "8px",
+                      right: "8px",
+                      bottom: "8px",
+                      borderRadius: "50%",
+                      background: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column"
                     }}>
-                      {result.resume_score}
-                    </div>
-                    <div style={{
-                      fontSize: "12px",
-                      color: "#888"
-                    }}>
-                      /100
+                      <div style={{
+                        fontSize: "36px",
+                        fontWeight: "800",
+                        color: "var(--brand-charcoal)"
+                      }}>
+                        {result.resume_score || 0}
+                      </div>
+                      <div style={{
+                        fontSize: "12px",
+                        color: "#888"
+                      }}>
+                        /100
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -385,7 +396,7 @@ export default function SkillGap() {
                       Skills Found:
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                      {result.ats_result.found.map(skill => (
+                      {(result.ats_result?.found || []).map(skill => (
                         <span key={skill} style={{
                           background: "rgba(125,155,118,0.12)",
                           border: "1px solid rgba(125,155,118,0.25)",
@@ -413,11 +424,11 @@ export default function SkillGap() {
                       Skills Missing:
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                      {result.ats_result.missing.map(skill => (
+                      {(result.ats_result?.missing || []).map(skill => (
                         <span key={skill} style={{
-                          background: "rgba(193,18,31,0.07)",
-                          border: "1px solid rgba(193,18,31,0.2)",
-                          color: "#c1121f",
+                          background: "rgba(128,128,128,0.12)",
+                          border: "1px solid rgba(128,128,128,0.25)",
+                          color: "#666",
                           padding: "4px 12px",
                           borderRadius: "20px",
                           fontSize: "13px",
@@ -431,223 +442,149 @@ export default function SkillGap() {
                 </div>
               </div>
 
-              {/* Suggested Courses */}
-              <div style={{
-                background: "white",
-                borderRadius: "16px",
-                border: "1px solid #ebebeb",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                padding: "28px",
-                marginBottom: "24px"
-              }}>
-                <h3 style={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  marginBottom: "20px"
-                }}>
-                  Suggested Courses
-                </h3>
-                {result.suggestions.map((suggestion, index) => (
-                  <div key={index} style={{ marginBottom: "24px" }}>
-                    <h4 style={{
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      color: "var(--brand-olive-dk)",
-                      marginBottom: "12px"
-                    }}>
-                      {suggestion.skill}
-                    </h4>
-                    <div style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                      gap: "12px"
-                    }} className="courses-grid">
-                      {suggestion.courses.map((course, courseIndex) => (
-                        <div key={courseIndex} style={{
-                          border: "1px solid #ebebeb",
-                          borderRadius: "10px",
-                          padding: "14px 16px",
-                          background: "#fafaf8",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "10px"
-                        }}>
-                          <div style={{
-                            fontSize: "13px",
-                            fontWeight: "600",
-                            color: "var(--brand-charcoal)"
-                          }}>
-                            {course.title}
-                          </div>
-                          <a
-                            href={course.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: "700",
-                              color: "var(--brand-olive-dk)",
-                              background: "rgba(125,155,118,0.1)",
-                              border: "1px solid rgba(125,155,118,0.25)",
-                              padding: "6px 14px",
-                              borderRadius: "20px",
-                              textDecoration: "none",
-                              textAlign: "center"
-                            }}
-                          >
-                            View →
-                          </a>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
               {/* Learning Roadmap */}
-              <div style={{
-                background: "white",
-                borderRadius: "16px",
-                border: "1px solid #ebebeb",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                padding: "28px",
-                marginBottom: "24px"
-              }}>
-                <h3 style={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  marginBottom: "20px"
-                }}>
-                  Your Learning Roadmap
-                </h3>
-                {result.suggestions.map((suggestion, index) => (
-                  <div key={index} style={{
-                    display: "flex",
-                    gap: "20px",
-                    alignItems: "flex-start",
-                    padding: "16px",
-                    border: "1px solid #ebebeb",
-                    borderRadius: "12px",
-                    background: "#fafaf8",
-                    marginBottom: "12px"
-                  }} className="roadmap-item">
-                    <div style={{
-                      background: "var(--brand-charcoal)",
-                      color: "var(--brand-cream)",
-                      borderRadius: "8px",
-                      padding: "6px 14px",
-                      fontSize: "12px",
-                      fontWeight: "800",
-                      whiteSpace: "nowrap",
-                      flexShrink: 0
-                    }} className="week-badge">
-                      Week {index + 1}
+              {result.roadmap && Array.isArray(result.roadmap) && (
+                <div style={{ marginTop: "32px" }}>
+                  <h3 style={{ fontFamily: "Montserrat", fontWeight: 700, fontSize: "20px", marginBottom: "16px" }}>
+                    Your Learning Roadmap
+                  </h3>
+                  {result.roadmap.map((item, index) => (
+                    <div key={index} style={{
+                      background: "white",
+                      borderRadius: "12px",
+                      border: "1px solid #ebebeb",
+                      padding: "20px",
+                      marginBottom: "16px",
+                      display: "flex",
+                      gap: "16px"
+                    }}>
+                      <div style={{
+                        background: "var(--brand-charcoal)",
+                        color: "white",
+                        borderRadius: "8px",
+                        padding: "8px 16px",
+                        fontWeight: 700,
+                        fontFamily: "Montserrat",
+                        whiteSpace: "nowrap",
+                        height: "fit-content"
+                      }}>
+                        Week {item.week}
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 700, fontFamily: "Montserrat", fontSize: "16px", marginBottom: "8px", color: "var(--brand-charcoal)" }}>
+                          {item.focus_skill}
+                        </div>
+                        <div style={{ color: "#666", marginBottom: "12px", fontFamily: "Montserrat", fontSize: "14px" }}>
+                          {item.why_it_matters}
+                        </div>
+                        <ul style={{ paddingLeft: "20px", margin: 0 }}>
+                          {item.action_items.map((action, i) => (
+                            <li key={i} style={{ fontFamily: "Montserrat", fontSize: "14px", color: "var(--brand-charcoal)", marginBottom: "4px" }}>
+                              {action}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{
-                        fontSize: "14px",
-                        fontWeight: "700",
-                        color: "var(--brand-charcoal)",
-                        marginBottom: "8px"
-                      }}>
-                        {suggestion.skill}
+                  ))}
+                </div>
+              )}
+
+              {/* Suggested Courses */}
+              {result.roadmap && result.roadmap.length > 0 && (
+                <div style={{ marginTop: "32px" }}>
+                  <h3 style={{ fontFamily: "Montserrat", fontWeight: 700, fontSize: "20px", marginBottom: "16px" }}>
+                    Suggested Courses
+                  </h3>
+                  {result.roadmap.map((item, index) => (
+                    <div key={index} style={{ marginBottom: "24px" }}>
+                      <div style={{ fontFamily: "Montserrat", fontWeight: 600, fontSize: "16px", color: "var(--brand-olive)", marginBottom: "12px" }}>
+                        {item.focus_skill}
                       </div>
-                      <div style={{
-                        fontSize: "13px",
-                        color: "#666",
-                        lineHeight: "1.5",
-                        marginBottom: "12px"
-                      }}>
-                        Build foundational knowledge in {suggestion.skill.toLowerCase()}. Complete at least one course and build a small project to add to your portfolio.
-                      </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                        {suggestion.courses.slice(0, 2).map((course, courseIndex) => (
-                          <a
-                            key={courseIndex}
-                            href={course.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: "600",
-                              color: "var(--brand-olive-dk)",
-                              background: "rgba(125,155,118,0.1)",
-                              border: "1px solid rgba(125,155,118,0.25)",
-                              padding: "4px 12px",
-                              borderRadius: "20px",
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+                        {[
+                          { title: `${item.focus_skill} – Coursera`, link: `https://www.coursera.org/search?query=${encodeURIComponent(item.focus_skill)}` },
+                          { title: `${item.focus_skill} – Udemy`, link: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(item.focus_skill)}` },
+                          { title: `${item.focus_skill} – YouTube`, link: `https://www.youtube.com/results?search_query=${encodeURIComponent(item.focus_skill)}` }
+                        ].map((course, i) => (
+                          <div key={i} style={{
+                            background: "white",
+                            borderRadius: "12px",
+                            border: "1px solid #ebebeb",
+                            padding: "16px",
+                            boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
+                          }}>
+                            <div style={{ fontFamily: "Montserrat", fontWeight: 600, fontSize: "14px", marginBottom: "12px", color: "var(--brand-charcoal)" }}>
+                              {course.title}
+                            </div>
+                            <a href={course.link} target="_blank" rel="noopener noreferrer" style={{
+                              display: "block",
+                              textAlign: "center",
+                              padding: "8px",
+                              background: "#f5f5e9",
+                              borderRadius: "8px",
+                              color: "var(--brand-charcoal)",
+                              fontFamily: "Montserrat",
+                              fontSize: "13px",
+                              fontWeight: 500,
                               textDecoration: "none"
-                            }}
-                          >
-                            {course.title.split(' – ')[0]}
-                          </a>
+                            }}>
+                              View →
+                            </a>
+                          </div>
                         ))}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {/* Interview Questions */}
-              <div style={{
-                background: "white",
-                borderRadius: "16px",
-                border: "1px solid #ebebeb",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                padding: "28px"
-              }}>
-                <h3 style={{
-                  fontSize: "18px",
-                  fontWeight: "700",
-                  marginBottom: "20px"
-                }}>
-                  Interview Questions
-                </h3>
-                {result.interview_questions.map((question, index) => (
-                  <div key={index} style={{
-                    border: "1px solid #ebebeb",
-                    borderRadius: "10px",
-                    marginBottom: "10px",
-                    overflow: "hidden",
-                    background: "#fafaf8"
-                  }}>
-                    <div
-                      onClick={() => toggleAccordion(index)}
-                      style={{
+              {result.interview_questions && result.interview_questions.length > 0 && (
+                <div style={{ marginTop: "32px" }}>
+                  <h3 style={{ fontFamily: "Montserrat", fontWeight: 700, fontSize: "20px", marginBottom: "16px" }}>
+                    Interview Questions
+                  </h3>
+                  {result.interview_questions.map((item, index) => (
+                    <details key={index} style={{
+                      background: "white",
+                      borderRadius: "12px",
+                      border: "1px solid #ebebeb",
+                      marginBottom: "12px",
+                      padding: "0",
+                      overflow: "hidden"
+                    }}>
+                      <summary style={{
                         padding: "16px 20px",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        color: "var(--brand-charcoal)",
+                        fontFamily: "Montserrat",
+                        fontWeight: 600,
+                        fontSize: "15px",
                         cursor: "pointer",
+                        color: "var(--brand-charcoal)",
+                        listStyle: "none",
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
-                        borderLeft: "3px solid var(--brand-olive)"
-                      }}
-                    >
-                      {question}
-                      <span style={{
-                        fontSize: "12px",
-                        transform: openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
-                        transition: "transform 0.2s"
+                        alignItems: "center"
                       }}>
-                        ▼
-                      </span>
-                    </div>
-                    {openIndex === index && (
-                      <div style={{
-                        padding: "14px 20px",
-                        fontSize: "13px",
-                        color: "#555",
-                        lineHeight: "1.7",
-                        borderTop: "1px solid #ebebeb",
-                        background: "white"
-                      }}>
-                        {ANSWERS[question] || "Answer not available for this question."}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+                        {typeof item === "string" ? item : item.question}
+                        <span style={{ color: "var(--brand-olive)", fontSize: "18px" }}>+</span>
+                      </summary>
+                      {typeof item === "object" && item.answer && (
+                        <div style={{
+                          padding: "0 20px 16px 20px",
+                          fontFamily: "Montserrat",
+                          fontSize: "14px",
+                          color: "#555",
+                          lineHeight: "1.6",
+                          borderTop: "1px solid #ebebeb"
+                        }}>
+                          {item.answer}
+                        </div>
+                      )}
+                    </details>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>

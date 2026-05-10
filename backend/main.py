@@ -6,11 +6,13 @@ import jwt
 import bcrypt
 import os
 import datetime
+import asyncio
 from dotenv import load_dotenv
 from typing import Optional
 import json
 import io
 from supabase import create_client, Client
+from groq import Groq
 
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
@@ -26,6 +28,8 @@ if not app_secret:
 supabase: Client = create_client(supabase_url, supabase_key)
 supabase_available = True
 print("Supabase connected successfully")
+
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Initialize FastAPI app
 app = FastAPI(title="AI Resume Builder API")
@@ -325,6 +329,38 @@ async def skill_gap_analyze(
         resume_text = "\n".join([p.text for p in doc.paragraphs])
 
     result = analyze_skill_gap(job_role, resume_text, additional_skills)
+    if result["ats_result"]["missing"]:
+        try:
+            print(f"Generating roadmap for {job_role} with missing skills: {result['ats_result']['missing']}")
+            roadmap = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: generate_learning_roadmap(job_role, result["ats_result"]["missing"])
+            )
+            result["roadmap"] = roadmap
+        except:
+            result["roadmap"] = None
+    
+    # Generate interview questions
+    try:
+        iq_prompt = f"""Generate 5 interview questions with detailed answers for a {job_role} role.
+    Return ONLY valid JSON in this exact format, no markdown:
+    [
+        {{"question": "Question here?", "answer": "Detailed answer here."}}
+    ]"""
+        iq_response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": iq_prompt}],
+            max_tokens=1500
+        )
+        iq_content = iq_response.choices[0].message.content.strip()
+        if iq_content.startswith("```json"): iq_content = iq_content[7:]
+        if iq_content.startswith("```"): iq_content = iq_content[3:]
+        if iq_content.endswith("```"): iq_content = iq_content[:-3]
+        result["interview_questions"] = json.loads(iq_content.strip())
+    except Exception as e:
+        print(f"Interview Q gen error: {e}")
+        result["interview_questions"] = []
+    
     return result
 
 @app.post("/api/jd-match")

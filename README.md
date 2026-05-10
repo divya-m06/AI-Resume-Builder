@@ -1,560 +1,293 @@
 # AI Resume Builder
 
-A full-stack AI-powered resume builder with React frontend and FastAPI backend.
+A full-stack AI-powered career tools web application that helps users build professional resumes, analyze skill gaps against job roles, and match their resume against job descriptions — all in one place.
+
+---
+
+## Features
+
+| Feature | Description |
+|---|---|
+| Resume Builder | Form-based resume generator. Fill in your details and download a professionally formatted PDF or DOCX instantly. |
+| Skill Gap Analyzer | Upload a resume file (PDF or DOCX), select a target job role, and get a breakdown of matched and missing skills using NLP. Includes course suggestions and interview questions. |
+| JD Keyword Matcher | Paste a job description and your resume text to get a keyword match score, matched keywords, and missing keywords. |
+| My Resumes | View all previously generated resumes saved to your account. Download as PDF or delete. |
+| Authentication | Secure custom signup and login with bcrypt password hashing and JWT-based session tokens. |
+
+---
+
+## Tech Stack
+
+**Frontend**
+- React 18 + Vite
+- Tailwind CSS
+- React Router v6
+- Axios
+- Deployed on Vercel
+
+**Backend**
+- FastAPI (Python)
+- spaCy (`en_core_web_sm`) + rapidfuzz — NLP-based skill extraction and fuzzy matching
+- Groq API (`llama3-8b-8192`) — AI-generated learning roadmaps
+- PyJWT + bcrypt — authentication
+- ReportLab — PDF generation
+- python-docx — DOCX generation
+- pdfminer.six — resume text extraction
+- Deployed on Render
+
+**Database**
+- Supabase (PostgreSQL)
+
+---
 
 ## Project Structure
 
 ```
-AI-Resume-Builder/
-├── frontend/          # React + Vite + Tailwind CSS
+AI-Resume-Builder-V2/
+├── backend/
+│   ├── main.py              # FastAPI app, all routes, auth logic
+│   ├── skill_gap.py         # Skill gap analysis and interview question bank
+│   ├── jd_matcher.py        # JD keyword extraction and match scoring
+│   ├── resume_engine.py     # PDF and DOCX generation
+│   ├── llm_service.py       # Groq API integration for roadmap generation
+│   ├── requirements.txt     # Pinned Python dependencies
+│   ├── build.sh             # Render build script (installs spaCy model)
+│   └── render.yaml          # Render deployment configuration
+├── frontend/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/     # Landing, Login, Dashboard, etc.
-│   │   ├── hooks/     # useAuth
-│   │   ├── lib/       # supabaseClient
-│   │   └── services/  # API service
-│   ├── .env           # Frontend environment variables
-│   └── package.json
-└── backend/           # FastAPI
-    ├── main.py        # FastAPI app with routes
-    ├── skill_gap.py   # Skill gap analysis logic
-    ├── jd_matcher.py  # JD matching logic
-    ├── resume_engine.py # PDF/DOCX generation
-    ├── llm_service.py # Groq API integration
-    ├── .env           # Backend environment variables
-    └── requirements.txt
+│   │   ├── pages/           # Landing, Login, Dashboard, ResumeBuilder, SkillGap, JDMatcher, MyResumes
+│   │   ├── components/      # Navbar, Footer
+│   │   ├── services/        # api.js — all backend API calls
+│   │   └── hooks/           # useAuth.js
+│   ├── vercel.json          # Vercel SPA routing configuration
+│   ├── package.json
+│   └── vite.config.js
+└── README.md
 ```
 
-## Features
+---
 
-- **Resume Builder**: Create professional resumes with PDF/DOCX export
-- **Skill Gap Analysis**: Analyze resume against job requirements
-- **JD Matcher**: Match resumes with job descriptions and suggest projects
-- **AI Learning Roadmap**: Generate personalized learning plans using Groq API
-- **Authentication**: Supabase-based user authentication
-
-## Setup Instructions
+## Local Setup
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Python 3.8+
-- Supabase account (for authentication)
-- Groq API key (for AI features)
+- Python 3.10+
+- Node.js 18+
+- A Supabase project with `users` and `resumes` tables
+- A Groq API key
 
-### Frontend Setup
-
-1. Navigate to frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables in `.env`:
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   VITE_API_BASE_URL=http://localhost:8000
-   ```
-
-4. Start development server:
-   ```bash
-   npm run dev
-   ```
-
-### Backend Setup
-
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Configure environment variables in `.env`:
-   ```
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_KEY=your_supabase_service_key
-   SUPABASE_JWT_SECRET=your_supabase_jwt_secret
-   GROQ_API_KEY=your_groq_api_key
-   FRONTEND_URL=http://localhost:5173
-   ```
-
-4. Start FastAPI server:
-   ```bash
-   uvicorn main:app --reload
-   ```
-
-## API Endpoints
-
-### Health Check
-- `GET /health` - Check server status
-
-### Resume Operations
-- `POST /api/resume/create` - Create a new resume
-- `POST /api/resume/download-pdf` - Download resume as PDF
-- `POST /api/resume/download-docx` - Download resume as DOCX
-- `GET /api/resumes/me` - Get user's resumes
-
-### Analysis Features
-- `POST /api/skill-gap/analyze` - Analyze skill gaps
-- `POST /api/jd-matcher/analyze` - Match with job descriptions
-
-## Design System
-
-### Colors
-- **Charcoal**: `#272727` - Primary text
-- **Olive**: `#7d9b76` - Primary brand color
-- **Cream**: `#f5f5e9` - Background
-
-### Typography
-- **Font**: Montserrat (Google Fonts)
-- **Weights**: 400, 500, 600, 700, 800
-
-### Components
-- **Navbar**: Fixed, blurred background, dark theme
-- **Cards**: White background, rounded corners, subtle shadow
-- **Buttons**: Olive background, rounded, Montserrat font
-
-## Development Notes
-
-- All backend files are complete and runnable
-- Frontend uses placeholder pages that will be implemented next
-- Authentication uses Supabase JWT tokens
-- File uploads are limited to PDF/DOCX under 10MB
-- AI features use Groq's llama3-8b-8192 model
-
-## Next Steps
-
-1. Implement individual page components (starting with Landing)
-2. Add authentication UI components
-3. Implement resume form and preview
-4. Add skill gap analysis UI
-5. Add JD matcher interface
-6. Connect all frontend components to backend APIs
-
-## Technologies Used
-
-### Frontend
-- React 19
-- Vite
-- Tailwind CSS
-- React Router
-- Axios
-- Supabase JS
+---
 
 ### Backend
-- FastAPI
-- Python 3.8+
-- ReportLab (PDF generation)
-- python-docx (DOCX generation)
-- pdfminer.six (PDF text extraction)
-- Groq API (AI features)
-- Supabase Py (database/auth)
-- 🔒 CSRF token protection
-- 🔒 Secure session cookies
-- 🔒 File upload validation (MIME type & size limits)
-- 🔒 Environment-based configuration
-- 🔒 XSS & clickjacking prevention headers
 
----
-
-## 🛠 Tech Stack
-
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| **Backend Framework** | Django | 5.2.7 |
-| **Language** | Python | 3.8 – 3.12 |
-| **Database** | SQLite3 | (bundled) |
-| **NLP Engine** | spaCy | 3.8.11 |
-| **PDF Generation** | ReportLab | 4.4.4 |
-| **Document Processing** | python-docx | 1.2.0 |
-| **PDF Extraction** | pdfminer.six | 20250506 |
-| **AI Integration** | OpenAI | 2.7.1 |
-| **Environment** | python-dotenv | 1.2.1 |
-| **Frontend** | HTML5, CSS3, JavaScript | - |
-| **ORM** | Django ORM | built-in |
-
----
-
-## 🐍 Python Version
-
-**Required:** Python **3.8 or higher**  
-**Tested on:** Python 3.8, 3.9, 3.10, 3.11, 3.12
-
-To check your Python version:
-```bash
-python --version
-# or
-python3 --version
-```
-
----
-
-## 📁 Folder Structure
-
-```
-AI-Resume-Builder/
-│
-├── � backend/                     # Backend Django application
-│   ├── 📂 resume_app/              # Main Django application
-│   │   ├── migrations/             # Database migrations
-│   │   │   └── (migration files)
-│   │   ├── __init__.py
-│   │   ├── models.py               # Database models
-│   │   ├── views.py                # View functions & logic
-│   │   ├── forms.py                # Django forms
-│   │   ├── urls.py                 # App URL routing
-│   │   ├── apps.py                 # App configuration
-│   │   ├── admin.py                # Django admin setup
-│   │   ├── utils.py                # Helper functions
-│   │   └── tests.py                # Unit tests
-│   │
-│   ├── 📂 resume_builder/          # Django project configuration
-│   │   ├── __init__.py
-│   │   ├── settings.py             # Django settings (config, middleware, apps)
-│   │   ├── urls.py                 # Root URL routing
-│   │   ├── wsgi.py                 # WSGI application entry point
-│   │   └── asgi.py                 # ASGI application entry point
-│   │
-│   ├── manage.py                   # Django management script
-│   ├── requirements.txt            # Project dependencies
-│   └── db.sqlite3                  # SQLite database
-│
-├── 📂 frontend/                    # Frontend assets
-│   ├── 📂 templates/               # HTML templates
-│   │   └── 📂 resume_app/
-│   │       ├── base.html           # Base template (navbar, layout)
-│   │       ├── landing.html        # Landing page
-│   │       ├── home.html           # User dashboard
-│   │       ├── login.html          # Login page
-│   │       ├── signup.html         # Signup page
-│   │       ├── forgot_password.html        # Password recovery
-│   │       ├── verify_otp.html     # OTP verification
-│   │       ├── reset_password.html # Password reset form
-│   │       ├── skill_gap.html      # Skill gap analysis form
-│   │       ├── enhance_skill_gap_result.html # Skill gap results
-│   │       ├── jd_analyzer.html    # JD analyzer form
-│   │       ├── jd_analysis_result.html # JD analysis results
-│   │       ├── create_resume.html  # Resume creation form
-│   │       ├── edit_resume.html    # Resume editing
-│   │       ├── resume_preview.html # Resume preview
-│   │       └── chat.html           # AI chat assistant
-│   │
-│   └── 📂 static/                  # Static files (CSS, JS, images)
-│       └── 📂 resume_app/
-│           └── style.css           # Global stylesheet
-│
-├── 📄 README.md                    # Project documentation (this file)
-├── 📄 CLAUDE.md                    # Security and coding rules
-├── 📄 .env.example                 # Environment variables template
-├── 📄 .gitignore                   # Git ignore rules
-└── 📂 venv/                        # Python virtual environment (created locally)
-```
-
----
-
-## 📦 Installation & Setup
-
-### Prerequisites
-- **Python 3.8+** installed on your system
-- **pip** (Python package manager)
-- **Git** (for cloning the repository)
-
-### Step 1: Clone the Repository
+**1. Navigate to the backend directory**
 
 ```bash
-git clone https://github.com/yourusername/AI-Resume-Builder.git
-cd AI-Resume-Builder
+cd backend
 ```
 
-### Step 2: Create a Virtual Environment
+**2. Create and activate a virtual environment**
 
 ```bash
-# On Windows
 python -m venv venv
+
+# Windows
 venv\Scripts\activate
 
-# On macOS/Linux
-python3 -m venv venv
+# macOS / Linux
 source venv/bin/activate
 ```
 
-You should see `(venv)` prefix in your terminal after activation.
-
-### Step 3: Install Dependencies
+**3. Install dependencies**
 
 ```bash
-pip install --upgrade pip
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 
-This installs all required packages including:
-- Django 5.2.7
-- spaCy with English language model
-- ReportLab (PDF generation)
-- python-docx (DOCX support)
-- OpenAI integration
-- And other dependencies
-
-### Step 4: Set Up Environment Variables
-
-Copy `.env.example` to `.env` in the **project root**:
+**4. Download the spaCy language model**
 
 ```bash
-# On Windows
-copy .env.example .env
-
-# On macOS/Linux
-cp .env.example .env
+python -m spacy download en_core_web_sm
 ```
 
-Edit `.env` with your configuration:
+**5. Create a `.env` file in the `backend/` directory**
 
-```env
-DJANGO_SECRET_KEY=your-strong-secret-key-here
-DJANGO_DEBUG=False
-ALLOWED_HOSTS=localhost,127.0.0.1
-OPENAI_API_KEY=your-openai-api-key-here
+```
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_anon_key
+GROQ_API_KEY=your_groq_api_key
+APP_SECRET_KEY=your_random_64_char_hex_secret
+FRONTEND_URL=http://localhost:5173
 ```
 
-⚠️ **Important:**
-- Never commit `.env` to version control
-- Generate a strong SECRET_KEY (use Django's key generator or online tools)
-- Set `DJANGO_DEBUG=False` in production
-- Keep `OPENAI_API_KEY` secret
-
-### Step 5: Apply Database Migrations
+Generate a secure `APP_SECRET_KEY` with:
 
 ```bash
-cd backend
-python manage.py migrate
-cd ..
+python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-This sets up the SQLite database with required tables.
-
-### Step 6: Create a Superuser (Optional)
-
-To access the Django admin panel:
+**6. Start the backend server**
 
 ```bash
-cd backend
-python manage.py createsuperuser
-cd ..
+uvicorn main:app --reload
 ```
 
-Follow the prompts to create an admin account.
+The API will be available at `http://localhost:8000`.
+Health check: `http://localhost:8000/health`
 
 ---
 
-## ⚙️ Configuration
+### Frontend
 
-### `.env` File Variables
-
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| `DJANGO_SECRET_KEY` | Secret key for Django | `your-secret-key-xyz` |
-| `DJANGO_DEBUG` | Debug mode (False in production) | `False` |
-| `ALLOWED_HOSTS` | Allowed hostnames | `localhost,127.0.0.1` |
-| `OPENAI_API_KEY` | OpenAI API key for AI features | `sk-...` |
-
-### Django Settings (`resume_builder/settings.py`)
-
-Key configurations:
-- **Database:** SQLite3 (`db.sqlite3`)
-- **Static Files:** Located in `resume_app/static/`
-- **Templates:** Located in `resume_app/templates/`
-- **Security Headers:** Enabled (CSP, HSTS, X-Frame-Options, etc.)
-- **Session Config:** Secure cookies, CSRF protection enabled
-
----
-
-## 🚀 Running the Project
-
-### Start the Development Server
-
-Navigate to the backend folder and start the development server:
+**1. Navigate to the frontend directory**
 
 ```bash
-cd backend
-python manage.py runserver
+cd frontend
 ```
 
-Expected output:
-```
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-```
-
-### Access the Application
-
-Open your browser and navigate to:
-- **Home Page:** `http://127.0.0.1:8000/`
-- **Landing Page:** `http://127.0.0.1:8000/landing`
-- **Admin Panel:** `http://127.0.0.1:8000/admin` (requires superuser login)
-
-### Common Commands
+**2. Install dependencies**
 
 ```bash
-# Navigate to backend folder first
-cd backend
-
-# Run development server on a specific port
-python manage.py runserver 8080
-
-# Create database tables (after model changes)
-python manage.py makemigrations
-python manage.py migrate
-
-# Collect static files (for production)
-python manage.py collectstatic --noinput
-
-# Interactive Python shell with Django context
-python manage.py shell
-
-# Run tests
-python manage.py test
-
-# Check for issues
-python manage.py check
+npm install
 ```
 
----
+**3. Create a `.env` file in the `frontend/` directory**
 
-## 📂 Project Modules
+```
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-### Models (`resume_app/models.py`)
-- **UserAccount** — User profiles (name, email, userid, password, phone)
-- **Resume** — Saved resume data (name, email, education, experience, skills)
-- **Skill** — Skill database (name, category)
-- **JobRole** — Job role definitions
-- **JobRoleSkill** — Mapping between job roles and required skills
-- **Project** — Project recommendations
-- **InterviewQuestion** — Interview questions per job role
+**4. Start the development server**
 
-### Views (`resume_app/views.py`)
+```bash
+npm run dev
+```
 
-#### Authentication
-- `landing_page` — Public landing page
-- `login_page` — User login
-- `signup_page` — User registration
-- `logout_user` — User logout
-- `forgot_password` — Password reset request
-- `verify_otp` — OTP verification
-- `reset_password` — Password reset form
-
-#### Resume Management
-- `home` — User dashboard
-- `create_resume` — Build resume from form
-- `resume_preview` — Preview resume
-- `edit_resume` — Edit uploaded resume
-- `download_resume_pdf` — Export as PDF
-- `download_resume_docx` — Export as DOCX
-
-#### Analysis & Recommendations
-- `skill_gap_form` — Skill gap analysis form
-- `enhanced_skill_gap_analysis` — Skill gap results with recommendations
-- `jd_analyzer_form` — Job description analyzer form
-- `jd_analyzer_result` — JD analysis and project suggestions
-
-#### AI Features
-- `chat_assistant` — AI-powered chat endpoint
-
-### Forms (`resume_app/forms.py`)
-- **ResumeForm** — Django ModelForm for resume creation
-
-### Utilities (`resume_app/utils.py`)
-- Helper functions for resume processing
-- File extraction utilities
+The app will be available at `http://localhost:5173`.
 
 ---
 
-## 🔐 Security Features
+## Environment Variables
 
-This project follows **OWASP Top 10** and **CLAUDE.md** security guidelines:
+### Backend (`backend/.env`)
 
-✅ **Authentication & Passwords**
-- Bcrypt password hashing (Django's `make_password`)
-- Secure password verification (`check_password`)
-- Minimum 8-character password requirement
+| Variable | Description |
+|---|---|
+| `SUPABASE_URL` | Your Supabase project URL |
+| `SUPABASE_KEY` | Your Supabase anon/service key |
+| `GROQ_API_KEY` | Your Groq API key for LLM roadmap generation |
+| `APP_SECRET_KEY` | Random secret used to sign JWT tokens (min 32 bytes hex) |
+| `FRONTEND_URL` | The frontend origin allowed by CORS (e.g. `http://localhost:5173` or your Vercel URL) |
 
-✅ **File Upload Safety**
-- MIME type validation
-- File size limits (10MB max)
-- Allowed extensions: `.pdf`, `.docx` only
+### Frontend (`frontend/.env`)
 
-✅ **CSRF Protection**
-- CSRF tokens on all forms
-- Selective `@csrf_exempt` for JSON APIs only
-
-✅ **HTTP Security Headers**
-- `X-Frame-Options: DENY` — Clickjacking prevention
-- `X-Content-Type-Options: nosniff` — MIME type sniffing prevention
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Strict-Transport-Security` — HTTPS enforcement
-- `Content-Security-Policy` — XSS prevention
-
-✅ **Environment & Configuration**
-- Secrets in `.env` (never in code)
-- `DEBUG=False` in production
-- Secure session and CSRF cookies
-- Strong SECRET_KEY requirement
-
-✅ **Input Validation**
-- Form validation on signup (email, userid)
-- Resume file validation
-- OTP verification
+| Variable | Description |
+|---|---|
+| `VITE_API_BASE_URL` | The backend base URL (e.g. `http://localhost:8000` or your Render URL) |
 
 ---
 
-## 🤝 Contributing
+## Supabase Table Schema
 
-Contributions are welcome! To contribute:
+**`users` table**
 
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/your-feature`
-3. **Commit** changes: `git commit -m 'Add feature'`
-4. **Push** to branch: `git push origin feature/your-feature`
-5. **Open** a Pull Request
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid | Primary key, auto-generated |
+| `name` | text | |
+| `email` | text | Unique |
+| `userid` | text | Unique, user-chosen login ID |
+| `phone` | text | Optional |
+| `password` | text | bcrypt hash — never stored as plaintext |
+| `created_at` | timestamptz | Auto-generated |
 
-### Code Standards
-- Follow **PEP 8** for Python code
-- Use meaningful variable and function names
-- Add docstrings to functions
-- Test changes before submitting
+**`resumes` table**
 
----
-
-## 📝 License
-
-This project is licensed under the **MIT License**. See LICENSE file for details.
-
----
-
-## 📞 Support
-
-For issues, questions, or suggestions:
-- 🐛 Open an **Issue** on GitHub
-- 💬 Check existing issues for solutions
-- 📧 Contact the maintainers
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid | Primary key, auto-generated |
+| `user_id` | uuid | Foreign key referencing `users.id` |
+| `full_name` | text | |
+| `job_title` | text | |
+| `resume_data` | jsonb | Full resume payload |
+| `created_at` | timestamptz | Auto-generated |
 
 ---
 
-## 🎓 Learning Resources
+## Deployment
 
-- [Django Documentation](https://docs.djangoproject.com/)
-- [spaCy NLP Guide](https://spacy.io/usage)
-- [ReportLab Tutorial](https://www.reportlab.com/docs/reportlab-userguide.pdf)
-- [OpenAI API Guide](https://platform.openai.com/docs)
+### Backend — Render
+
+**1.** Push the repository to GitHub.
+
+**2.** Go to [render.com](https://render.com) and create a new **Web Service**.
+
+**3.** Connect your GitHub repository. Set the **Root Directory** to `backend/`.
+
+**4.** Render will detect `render.yaml` automatically. Confirm:
+- Build Command: `bash build.sh`
+- Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+
+**5.** Add the following environment variables in the Render dashboard:
+
+```
+SUPABASE_URL      = your_supabase_url
+SUPABASE_KEY      = your_supabase_key
+GROQ_API_KEY      = your_groq_key
+APP_SECRET_KEY    = your_secret_key
+FRONTEND_URL      = https://your-app.vercel.app
+```
+
+**6.** Deploy. Once live, verify with: `https://your-render-url.onrender.com/health`
 
 ---
 
-**Made with ❤️ by the AI Resume Builder Team**
+### Frontend — Vercel
+
+**1.** Go to [vercel.com](https://vercel.com) and create a new project from your GitHub repository.
+
+**2.** Set the **Root Directory** to `frontend/`.
+
+**3.** Framework preset: **Vite** (auto-detected).
+
+**4.** Add the following environment variable:
+
+```
+VITE_API_BASE_URL = https://your-render-url.onrender.com
+```
+
+**5.** Deploy.
+
+**6.** After deployment, go back to Render and update `FRONTEND_URL` to your Vercel URL, then redeploy the backend to apply the CORS update.
+
+> **Note:** Render free tier services spin down after 15 minutes of inactivity. The first request after inactivity may take 20–30 seconds to respond.
+
+---
+
+## API Reference
+
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| GET | `/health` | No | Health check |
+| POST | `/api/auth/signup` | No | Register a new user |
+| POST | `/api/auth/login` | No | Login and receive JWT token |
+| POST | `/api/resume/download-pdf` | No | Generate and download PDF |
+| POST | `/api/resume/download-docx` | No | Generate and download DOCX |
+| POST | `/api/resume/save` | No | Save resume to database |
+| GET | `/api/my-resumes` | No | List saved resumes by userid |
+| GET | `/api/resume/{id}/pdf` | Yes | Download a saved resume as PDF |
+| DELETE | `/api/resume/{id}` | No | Delete a saved resume |
+| POST | `/api/skill-gap/analyze` | No | Analyze skill gap from uploaded resume |
+| POST | `/api/jd-match` | No | Match resume text against job description |
+
+---
+
+## Screenshots
+
+Add screenshots here.
+
+---
+
+## License
+
+This project was built for a hackathon. Feel free to fork and extend.

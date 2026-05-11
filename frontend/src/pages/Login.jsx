@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { loginUser, signupUser } from "../services/api"
 import { useAuth } from "../hooks/useAuth"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function Login() {
   const { setUser } = useAuth()
@@ -24,6 +25,10 @@ export default function Login() {
     phone: "",
     password: ""
   })
+
+  // Password visibility states
+  const [showSigninPassword, setShowSigninPassword] = useState(false)
+  const [showSignupPassword, setShowSignupPassword] = useState(false)
 
   const handleSignIn = async (e) => {
     e.preventDefault()
@@ -246,23 +251,46 @@ export default function Login() {
               }}>
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={signinForm.password}
-                onChange={(e) => setSigninForm({...signinForm, password: e.target.value})}
-                required
-                style={{
-                  width: "100%",
-                  border: "1.5px solid #e0e0d8",
-                  borderRadius: "10px",
-                  padding: "12px 16px",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: "14px",
-                  background: "#fafaf8",
-                  boxSizing: "border-box"
-                }}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showSigninPassword ? "text" : "password"}
+                  name="password"
+                  value={signinForm.password}
+                  onChange={(e) => setSigninForm({...signinForm, password: e.target.value})}
+                  required
+                  style={{
+                    width: "100%",
+                    border: "1.5px solid #e0e0d8",
+                    borderRadius: "10px",
+                    padding: "12px 40px 12px 16px",
+                    fontFamily: "Montserrat, sans-serif",
+                    fontSize: "14px",
+                    background: "#fafaf8",
+                    boxSizing: "border-box"
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSigninPassword(!showSigninPassword)}
+                  aria-label={showSigninPassword ? "Hide password" : "Show password"}
+                  style={{
+                    position: "absolute",
+                    right: "12px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#666"
+                  }}
+                >
+                  {showSigninPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <button
@@ -426,23 +454,46 @@ export default function Login() {
               }}>
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={signupForm.password}
-                onChange={(e) => setSignupForm({...signupForm, password: e.target.value})}
-                required
-                style={{
-                  width: "100%",
-                  border: "1.5px solid #e0e0d8",
-                  borderRadius: "10px",
-                  padding: "12px 16px",
-                  fontFamily: "Montserrat, sans-serif",
-                  fontSize: "14px",
-                  background: "#fafaf8",
-                  boxSizing: "border-box"
-                }}
-              />
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showSignupPassword ? "text" : "password"}
+                  name="password"
+                  value={signupForm.password}
+                  onChange={(e) => setSignupForm({...signupForm, password: e.target.value})}
+                  required
+                  style={{
+                    width: "100%",
+                    border: "1.5px solid #e0e0d8",
+                    borderRadius: "10px",
+                    padding: "12px 40px 12px 16px",
+                    fontFamily: "Montserrat, sans-serif",
+                    fontSize: "14px",
+                    background: "#fafaf8",
+                    boxSizing: "border-box"
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSignupPassword(!showSignupPassword)}
+                  aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                  style={{
+                    position: "absolute",
+                    right: "12px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#666"
+                  }}
+                >
+                  {showSignupPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <button

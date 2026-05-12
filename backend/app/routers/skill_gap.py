@@ -1,3 +1,6 @@
+from app.services.nlp_service import extract_skills
+
+
 def analyze_skill_gap(job_role, resume_text, additional_skills=None):
     """
     Analyze skill gap between job role requirements and resume content.
@@ -63,9 +66,9 @@ def analyze_skill_gap(job_role, resume_text, additional_skills=None):
         additional_list = [s.strip().lower() for s in additional_skills.split(",") if s.strip()]
         expected.extend(additional_list)
 
-    # Find skills in resume
-    resume_text_lower = resume_text.lower()
-    found_skills = [s for s in expected if s in resume_text_lower]
+    resume_skills_set = {s.lower() for s in extract_skills(resume_text)}
+
+    found_skills = [s for s in expected if s.lower() in resume_skills_set]
     missing_skills = [s for s in expected if s not in found_skills]
 
     # Calculate score
@@ -93,4 +96,3 @@ def analyze_skill_gap(job_role, resume_text, additional_skills=None):
         "suggestions": suggestions,
         "interview_questions": []   # Populated by Groq in the API route (main.py)
     }
-

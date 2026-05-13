@@ -81,7 +81,7 @@ AI-Resume-Builder-V2/
 ## Prerequisites
 
 - **Node.js** 18+ (20 LTS recommended)
-- **Python** 3.11 (matches `backend/runtime.txt`)
+- **Python** 3.11.9 exactly — download from python.org/downloads/release/python-3119 — newer versions (3.12+) will cause dependency conflicts
 - **Git**
 - Accounts / keys: **Supabase** project, **Groq** API key (recommended for AI features)
 
@@ -105,17 +105,7 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-Download the spaCy English model (required for skill-gap NLP):
-
-```powershell
-python -m spacy download en_core_web_sm
-```
-
-If that command fails on Windows, install the wheel (matches spaCy 3.7.x):
-
-```powershell
-pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
-```
+The spaCy English model installs automatically via pip install -r requirements.txt. No separate download needed.
 
 Create `backend/.env` from `backend/.env.example` and set:
 

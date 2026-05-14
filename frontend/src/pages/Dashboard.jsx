@@ -612,7 +612,7 @@ export default function Dashboard() {
         fontFamily: "Montserrat, sans-serif",
         fontSize: "13px"
       }}>
-        {/* Main footer content */}
+        {/* Main footer contents */}
         <div style={{
           padding: "40px",
           display: "flex",

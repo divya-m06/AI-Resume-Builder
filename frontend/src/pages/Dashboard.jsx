@@ -703,7 +703,7 @@ export default function Dashboard() {
               Built for Students and Professionals
             </h4>
             <a
-              href="https://github.com/divya-m06/AI-Resume-Builder"
+              href="https://github.com/divya-m06/AI-Resume-Builder.git"
               target="_blank"
               rel="noopener noreferrer"
               style={{

@@ -493,7 +493,7 @@ roadmaps, Job Description keyword matching, and instant cover letter generation.
               Build smarter resumes with AI-powered tools for career success.
               <br />
               <a
-                href="https://github.com/Thushark23/AI-ResumeBuilder"
+                href="https://github.com/divya-m06/AI-Resume-Builder.git"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "var(--brand-cream2)", textDecoration: "none" }}

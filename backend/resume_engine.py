@@ -122,7 +122,7 @@ def generate_pdf(resume_data):
             elements.append(Paragraph("• " + line, normal))
         elements.append(Spacer(1, 10))
 
-    # Border on all pages
+    # Border on all page
     def add_border(canvas, doc):
         canvas.saveState()
         canvas.setStrokeColor(colors.HexColor("#003b88"))

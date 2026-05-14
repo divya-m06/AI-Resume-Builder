@@ -54,7 +54,7 @@ def generate_learning_roadmap(job_role, missing_skills, experience_level="beginn
 
         content = content.strip()
 
-        # Parse JSON
+    
         roadmap = json.loads(content)
 
         # Validate structure

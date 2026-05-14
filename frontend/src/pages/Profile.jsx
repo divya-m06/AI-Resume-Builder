@@ -139,7 +139,7 @@ export default function Profile() {
 
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--brand-charcoal2, var(--brand-charcoal))', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
-                  Email
+                  Email 
                 </label>
                 <input
                   type="email"
